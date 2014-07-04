@@ -1,0 +1,33 @@
+doctype html
+html
+	head
+		title= title
+		link(href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css', rel='stylesheet')
+		script(src='/javascripts/jquery.min.js')
+		script(src='/javascripts/jquery-ui-1.10.4.js')
+		script(src='/javascripts/jquery-main.js')
+	body
+		block content
+	
+		#tabs
+			ul
+				li
+					a(href='#T2K') T2K			
+				li
+					a(href='#V93k') V93k
+
+			#T2K
+				#accordion2
+					each t2ktester in t2ktesters
+						h3 #{t2ktester.testername} updated #{t2ktester.hours_elapsed} hours ago.
+						.divb
+							p
+								|#{t2ktester.startdt} #{t2ktester.username} #{t2ktester.category} #{t2ktester.reason1} #{t2ktester.reason1}
+			#V93k
+				#accordion1
+					each v93ktester in v93ktesters
+						h3 #{v93ktester.testername} updated #{v93ktester.hours_elapsed} hours ago.
+						.diva
+							p
+								|#{v93ktester.startdt} #{v93ktester.username} #{v93ktester.category} #{v93ktester.reason1} #{v93ktester.reason1}
+
