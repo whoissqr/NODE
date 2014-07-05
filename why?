@@ -1,0 +1,14 @@
+Why did I choose Nodejs? 
+
+Actually, I have almost zero exposure in web development except some html editing and IIS|Apache Tomcat based http request|response and web form interaction stuff many years ago. 
+
+I am running an one man show in the current company, I am the project manager, the architect, the programmer, the SDET and the operation support, yes,  a full fledged functional opsdev team, except the human resource are 100% shared across. So as the 'architect' of my tiny team, I will definitely choose some technology which I can handle and even take advantage of. 
+
+Okay, exactly, what is good about NODEJS? The immediately response in mind initially might be some trivial stuff of NODEJS. First, I can program it in 100% JavaScript, and I could use same language and library for both front end and backend; this is a pain killer. Second, it is hot among the open source community; well, this sounds superficial and vulgar, it actually means a lot to me and my team (which includes I, me and myself ). A popular platform means a good supply of well written libraries for some common tasks and faster response from the larger groups of programmers when I post some idiot question in the stackoverflow ( I haven't done so yet, as most of my questions are common questions and already well answered in some posts :) 
+
+Well, a lot of really goodies of NODEJS caught my attention after I used for 2-3 days, including  
+
+** NPM, the package manager, most of the time, you can need to type a single command to download and install a library to your work environment, and that command is simple as 'npm install xxx'; 
+** Asynchronous event handling - once you get comfortable with the syntax and idea of call backs. You are on your way to faster and more robust implementations in many cases. 
+** D3, yes, I would single out D3 among other good libraries like express, pg-query, async, mongoDB, etc; as a free open source vector graphics library, it is overwhelming. You will know when you just open their web page and tons of fantastic examples present themselves upon your 1st sight. Thanks to those genius developers! 
+ 
