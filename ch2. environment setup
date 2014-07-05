@@ -1,7 +1,7 @@
 What do you need? 
 
 ** NODES itself.  
-** A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade; I don't need to mention other good feature about it. It is already widely recognized among the communitiy.
+** A good editor -- I am using Sublime myself; I recommend this as you might need 'tab conscious' editor to work well with jade; I don't need to mention other good feature about it. It is already widely recognized among the communitiy.
 ** You can use 'express' for web server. 
 ** You can use 'pg-query' for database interface to PostgresSQL. 
 ** You can use 'async' for asynchronous database queries. 
