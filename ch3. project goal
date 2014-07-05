@@ -1,0 +1,18 @@
+What do I plan to do with NODEJS? 
+
+** A page to display 'static' data from postgresql database; here, by 'static', I mean there is no user interaction at all. The page just displays the result of some SQL select query results in table form. Through this, I have learnt the basic stuff about Express server architecture, jQuery+JavaScript+jade; specifically, as a fresh nodejs programmer, I got some hands on experience to integrate some open source javascript library to my project (pg-query, d3, ..) 
+
+How to use basic javascript data structure to store database query result and pass them to jade template 
+How to pass JSON data from http server to javascript embedded in jade module. 
+The basic idea of call back. Here, we need to wait for database query to finish before we process the query result and render the web page using res.render(…) 
+
+** A page to display some 'static' data from postgresql database in d3 chart; this is similar to previous task, however, with added complexity; let me explain:  I need to implement a nested query here; 
+step 1, I need to get a list of distinct tester names from database; 
+step 2, then for each tester name, I want to retrieve its last record in a huge table. 
+
+So here, 
+a) step 1 is a prerequisite of step 2; therefore, step 2 queries need to be nested inside the call back of step 1 query. 
+b) And, the multiple queries for each tester in step 2 should be run in parallel to each other and how fast it can should be limited by database server capability; our http server shouldn't wait for each to complete and proceed with the next; here, the asynchronous feature of nodejs comes into the scene nicely. We can just make use of the async.each(…) api to implement this. 
+We can simply declare an array to hold the step 2 query result. For each query, it just pushes its processed database results to the array. 
+
+As expected, the async.each(…) api also provides a call back. After all queries in step 2 finishes, we can process the results array in the call back and render them to web pages.
