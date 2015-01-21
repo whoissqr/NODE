@@ -4,8 +4,8 @@ NODE
 sample CRUD application using NODEJS with PostgreSQL
 
 
-This is a extremely simple NODEJS application build on of Express http server architecture. It connects to a PostgreSQL server and display some database rows in 
-graphical (d3.js) or tabular form (Datatable) to user.
+This is an extremely simple NODEJS application built on top of Express. It connects to a PostgreSQL server and display some database rows in 
+graphical (d3.js) or tabular (Datatable) form .
 
 What do you need?
 	a. NODES itself. 
@@ -16,6 +16,6 @@ What do you need?
 	f. You can use 'd3' to visualize your data.
 	g. You can use 'jQuery' for tabs, tables, form implementation in web pages.
 	h. A good debugger 
-	i.  the simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
-	ii. Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven’t used it much yet. No comment.
+	   - The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
+	   - Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
