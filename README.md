@@ -41,19 +41,19 @@ graphical (d3.js) or tabular (Datatable) form .
 	Then open routes/search.js, we will find the below code snippet
 	'''
 	router.get('/', function(req, res) {
-						......              //prepare data
-						res.render('search', {testerArray:testerArray, 
-											  handlerArray:handlerArray, 
-											  deviceArray:deviceArray, 
-											  recentLotArray:recentLotArray
-											 });								
+		......              //prepare data
+		res.render('search', 	testerArray:testerArray, 
+								handlerArray:handlerArray, 
+								deviceArray:deviceArray, 
+								recentLotArray:recentLotArray
+							});								
 	});
 	'''
 	module.exports = router;
 	OK, what we are doing here is pretty much simple -- we need to prepare some data before we actually rendering the web page.
 	When we are ready, we will do a res.render(....), which means to respond the URL (/search) with a JADE page (search.jade) and several variables attaching to it.
 	
-	Now open the JADE file (views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to http://html2jade.org/ , copy the jade file content to the right text box, and it will show the HTML content on the left side.
+	Now open the JADE file (views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.
 	
 	Ok, here is the question -- how do we render those javascript Array in HTML code and handler user interactions dynamically?
 	
