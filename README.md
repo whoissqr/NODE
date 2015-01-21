@@ -10,12 +10,16 @@ graphical (d3.js) or tabular (Datatable) form .
 ##What do you need?
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
-3. You can use 'express' for web server.
-4. You can use 'pg-query' for database interface to PostgresSQL.
-5. You can use 'async' for asynchronous database queries.
-6. You can use 'd3' to visualize your data.
-7. You can use 'jQuery' for tabs, tables, form implementation in web pages.
-8. A good debugger 
+3. 
+| NODE libs  | description |
+| :------------ |:---------------:|
+| express     | web server | 
+| pg-query      | database interface to PostgresSQL | 
+| async | run tasks in parallel        |
+| d3 | front end graphics |
+|jQuery| frond end library for forms |
+
+4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 	- Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
