@@ -1,13 +1,13 @@
 NODE
 ====
 
-sample CRUD application using NODEJS with PostgreSQL
+#sample CRUD application using NODEJS with PostgreSQL
 
 
 This is an extremely simple NODEJS application built on top of Express. It connects to a PostgreSQL server and display some database rows in 
 graphical (d3.js) or tabular (Datatable) form .
 
-What do you need?
+#What do you need?
 	a. NODES itself. 
 	b. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
 	c. You can use 'express' for web server.
@@ -19,7 +19,7 @@ What do you need?
 	   - The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 	   - Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
-How to read those bunch of code?
+#How to read those bunch of code?
 	Some basic understanding about Express folder structure is helpful. To me, most frequently access folder are 
 		- app.js       this is like an entry point.
 		- routes	   well, those are where the page URL being routed to.
