@@ -12,15 +12,15 @@ graphical (d3.js) or tabular (Datatable) form .
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
 3. misc NODE open source libraries. Don't re-invent the wheels.
 
-| NODE libs  | description | links |
-| :------------ |:------------| :------------|
-| [express](http://expressjs.com/)       | Fast, unopinionated, minimalist web framework for Node.js                                                               | http://expressjs.com/ |
-| pg-query      | database interface to PostgresSQL                                                                                       | https://github.com/brianc/node-pg-query |
-| async         | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript. | https://github.com/caolan/async |
-| d3            | a JavaScript library for manipulating documents based on data.                                                          | http://d3js.org/ |
-| lodash        | A utility library delivering consistency, customization, performance, & extras.                                         | https://lodash.com/ |
-| jquery        | a fast, small, and feature-rich JavaScript library.                                                                     | http://jquery.com/ |
-| node-windows  | a library which helps to wrap Node.js server in windows service form.                                                   | https://github.com/coreybutler/node-windows |
+| NODE libs  | description |
+| :------------ |:------------|
+| [express](http://expressjs.com/)       | Fast, unopinionated, minimalist web framework for Node.js                                                               |
+| [pg-query](https://github.com/brianc/node-pg-query)      | database interface to PostgresSQL                                                                     |
+| [async](https://github.com/caolan/async)         | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.  |
+| [d3](http://d3js.org/)           | a JavaScript library for manipulating documents based on data.                                                                 |  
+| [lodash](https://lodash.com/)        | A utility library delivering consistency, customization, performance, & extras.                                            | 
+| [jquery](http://jquery.com/)        | a fast, small, and feature-rich JavaScript library.                                                                         | 
+| [node-windows](https://github.com/coreybutler/node-windows )  | a library which helps to wrap Node.js server in windows service form.                             | 
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
