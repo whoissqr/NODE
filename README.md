@@ -7,7 +7,7 @@ NODE
 This is an extremely simple NODEJS application built on top of Express. It connects to a PostgreSQL server and display some database rows in 
 graphical (d3.js) or tabular (Datatable) form .
 
-#What do you need?
+##What do you need?
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
 3. You can use 'express' for web server.
@@ -19,7 +19,7 @@ graphical (d3.js) or tabular (Datatable) form .
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 	- Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
-#How to read those bunch of code?
+##How to read those bunch of code?
 
 Some basic understanding about Express folder structure is helpful. To me, most frequently access folder are 
 
@@ -60,8 +60,18 @@ When we are ready, we will do a res.render(....), which means to respond the URL
 **Now open the JADE file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade)**; finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.  
 
 Ok, here is the question -- how do we render those javascript Array in HTML code and handler user interactions dynamically?
+
+Firstly, we need to expose the variable to some front end logic writtent in JavaScript. We do this in JADE; here is the code snippet; 
+```JavaScript
+script(src='/front_JS/searchFrontEnd.js')   //include this javascript code in jade
+
+script(type='text/javascript').
+  var recentLotArray =!{JSON.stringify(recentLotArray)};    //pass variable to javascript code
+  var testerArray =!{JSON.stringify(testerArray)};          //pass variable to javascript code
+  var handlerArray =!{JSON.stringify(handlerArray)};        //pass variable to javascript code
+  var deviceArray =!{JSON.stringify(deviceArray)};          //pass variable to javascript code
+```
 	
-	
-	
+**Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to take a look at the front end logic.
 	
 	
