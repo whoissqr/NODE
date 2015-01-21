@@ -10,14 +10,16 @@ graphical (d3.js) or tabular (Datatable) form .
 ##What do you need?
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
-3. 
-| NODE libs  | description |
-| :------------ |:---------------:|
-| express     | web server | 
-| pg-query      | database interface to PostgresSQL | 
+3. misc NODE open source libraries. Don't re-invent the wheels.
+| NODE libs  | description | links |
+| :------------ |:------------|:------------|
+| express     | Fast, unopinionated, minimalist web framework for Node.js | http://expressjs.com/ |
+| pg-query      | database interface to PostgresSQL | https://github.com/brianc/node-pg-query |
 | async | run tasks in parallel        |
-| d3 | front end graphics |
-|jQuery| frond end library for forms |
+| d3 | a JavaScript library for manipulating documents based on data. | http://d3js.org/ |
+| lodash| A utility library delivering consistency, customization, performance, & extras. | https://lodash.com/ |
+| jQuery| a fast, small, and feature-rich JavaScript library. | http://jquery.com/ |
+|node-windows | a library which helps to wrap Node.js server in windows service form. | https://github.com/coreybutler/node-windows |
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
