@@ -31,12 +31,15 @@ graphical (d3.js) or tabular (Datatable) form .
 	
 	Ok, let me start with an example, I have a page called http://localhost:3000/search
 	You will see these two lines of code somewhere in app.js:
+	'''
 	var search = require('./routes/search');    //line 1
 	app.use('/search', search);                 //line 2
+	'''
 	
 	Line 2 above is matching URL with route, and line 1 is defining the file path ('./routes/search') for the route.
 	
 	Then open routes/search.js, we will find the below code snippet
+	'''
 	router.get('/', function(req, res) {
 						......              //prepare data
 						res.render('search', {testerArray:testerArray, 
@@ -45,6 +48,7 @@ graphical (d3.js) or tabular (Datatable) form .
 											  recentLotArray:recentLotArray
 											 });								
 	});
+	'''
 	module.exports = router;
 	OK, what we are doing here is pretty much simple -- we need to prepare some data before we actually rendering the web page.
 	When we are ready, we will do a res.render(....), which means to respond the URL (/search) with a JADE page (search.jade) and several variables attaching to it.
