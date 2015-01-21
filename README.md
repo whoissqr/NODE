@@ -31,7 +31,7 @@ graphical (d3.js) or tabular (Datatable) form .
 	
 	Ok, let me start with an example, I have a page called http://localhost:3000/search
 	You will see these two lines of code somewhere in app.js:
-	'''
+	'''JavaScript
 	var search = require('./routes/search');    //line 1
 	app.use('/search', search);                 //line 2
 	'''
@@ -39,7 +39,7 @@ graphical (d3.js) or tabular (Datatable) form .
 	Line 2 above is matching URL with route, and line 1 is defining the file path ('./routes/search') for the route.
 	
 	Then open routes/search.js, we will find the below code snippet
-	'''
+	'''JavaScript
 	router.get('/', function(req, res) {
 		......              //prepare data
 		res.render('search', 	testerArray:testerArray, 
