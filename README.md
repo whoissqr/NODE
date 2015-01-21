@@ -24,7 +24,7 @@ graphical (d3.js) or tabular (Datatable) form .
 		- app.js       this is like an entry point.
 		- routes	   well, those are where the page URL being routed to.
 		- public	   this contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
-						public/javascripts which i used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)	   
+						public/javascripts which i used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
 		- views   	   All those JADE files.
 		- config.json  this is where I store DB login credentials.
 		- packge.json  this is where Express configures the back end JavaScript modules.
@@ -53,7 +53,7 @@ graphical (d3.js) or tabular (Datatable) form .
 	OK, what we are doing here is pretty much simple -- we need to prepare some data before we actually rendering the web page.
 	When we are ready, we will do a res.render(....), which means to respond the URL (/search) with a JADE page (search.jade) and several variables attaching to it.
 	
-	Now open the JADE file (views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.
+	Now open the JADE file (views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.  
 	
 	Ok, here is the question -- how do we render those javascript Array in HTML code and handler user interactions dynamically?
 	
