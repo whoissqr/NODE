@@ -1,0 +1,54 @@
+doctype html
+html
+	head
+		title === universal testing query ===
+
+		link(href='/stylesheets/style.css', rel='stylesheet')
+		link(href='/stylesheets/jquery.dataTables.css', rel='stylesheet')
+		link(href='//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css', rel='stylesheet')
+
+		script(src='/javascripts/jquery.min.js')
+		script(src='/javascripts/jquery-ui-1.10.4.js')
+		script(src='/javascripts/jquery.js')
+		script(src='/javascripts/jquery.dataTables.min.js')
+
+
+		script(src='/javascripts/typeahead.bundle.js')
+		script(src='/javascripts/handlebars-v2.0.0.js')
+		script(src='/front_JS/searchFrontEnd.js')
+	
+		script(type='text/javascript').
+			var recentLotArray =!{JSON.stringify(recentLotArray)};
+			var testerArray =!{JSON.stringify(testerArray)};
+			var handlerArray =!{JSON.stringify(handlerArray)};
+			var deviceArray =!{JSON.stringify(deviceArray)};
+		
+	body
+
+		form#queryForm(method='get')
+			#custom-templates
+				input.typeahead#keystr(type='text', placeholder='lot id, tester id, handler id, device, kyec, spil, xap, atk', size = 60, name='keystr')
+				
+			input#btn_search_query(type='submit')
+
+		br 
+		br  
+		br
+		br
+		br
+		br
+
+		button#factory.displayButton Factory
+		button#tester.displayButton Tester
+		button#handler.displayButton Handler
+		button#lotid.displayButton lotid
+		button#grade.displayButton grade
+		button#dev.displayButton device
+		button#pkg.displayButton package
+
+		br
+		br
+		hr
+		#ttResult
+
+

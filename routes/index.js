@@ -1,11 +1,12 @@
+var config = require('../config.json');
 var express = require('express');
 var query = require('pg-query');
 var assert = require('assert');
 var async = require('async');
-var d3 = require('d3');
 var url = require('url');
 var queryString = require('querystring');
-
+var jQuery = require('jquery');
+var $ = jQuery.create();
 var router = express.Router();
 
 /* GET home page. */
@@ -13,246 +14,459 @@ router.get('/', function(req, res) {
 	res.render('index', { title: 'Express@4.2.0' });
 });
 
-/* GET Hello World page. */
-router.get('/helloworld', function(req, res) {
-		res.render('helloworld', { title: 'Hello, XAP!' })
+/* AJAX handler for test time query */
+router.get('/queryTT', function(req, res) {
+	var theUrl = url.parse( req.url );
+	var queryObj = queryString.parse( theUrl.query );
+	var params = JSON.parse( queryObj.jsonParams );
+
+	query.connectionParameters = config.reportConnStr;      //connecting to localhost
+	var device, pkg, sites, grade, group;
+	$.each(params, function(){
+			switch(this.name){
+					 case 'device':  device = this.value;  break;
+					 case 'package': pkg    = this.value;  break;
+					 case 'sites':   sites  = this.value;  break;
+					 case 'grade': 	 grade  = this.value;  break;
+					 case 'group':   group  = this.value;  break;
+			}
+	});				
+
+  //select among those row whose test time falls within the 4 sigma envelope
+	var sqlstr = 'select device, testprog, package as pkg, testgrade, testgroup, scd, temp, sum(qtyin) AS qtyin, sum(qtyout) qtyout, round((sum(qtyout*testtime)/sum(qtyout))::numeric,2)  as tt from testtime ';
+
+	var whereCond = 'where device=\'' + device + '\' ';
+	if(pkg!='-')   whereCond += 'and package=\'' + pkg + '\' ';
+	if(sites!='-') whereCond += 'and actualnumofsites=\'' + sites + '\' ';
+	if(grade!='-') whereCond += 'and lower(testgrade)=\'' + grade.toLowerCase() + '\' ';
+	if(group!='-') whereCond += 'and lower(testgroup)=\'' + group.toLowerCase() + '\' ';
+
+	sqlstr += whereCond;
+
+	sqlstr +=' group by device,testprog, package, testgrade, testgroup, scd, temp';
+	sqlstr +=' order by testprog, testgroup,package';
+
+	console.log(sqlstr);
+
+	query(sqlstr, function(err, rows, result) {
+			assert.equal(rows, result.rows);
+			console.log(rows.length + " rows returned.");
+			var tableContent = {};
+			if(rows.length==0) {
+					res.json(tableContent);
+					return;
+			}
+			
+			var aaData = new Array();
+			
+			for (var i = 0; i < rows.length; i++) {   
+				var rowArray = {};
+				rowArray['device'] = rows[i].device;
+				rowArray['testprog'] = rows[i].testprog;
+				rowArray['package'] = rows[i].pkg;
+				rowArray['testgrade'] = rows[i].testgrade;
+				rowArray['testgroup'] = rows[i].testgroup;
+				rowArray['SCD'] = rows[i].scd;
+				rowArray['Temp'] = rows[i].temp;
+				rowArray['qtyin'] = rows[i].qtyin;
+				rowArray['qtyout'] = rows[i].qtyout;
+				rowArray['testtime'] = rows[i].tt;
+				aaData.push(rowArray);
+			}
+			tableContent['aaData'] = aaData;		
+			res.json(tableContent);
+	});
 });
 
+/* AJAX handler for test insertion history query */
+router.get('/queryFTC', function(req, res) {
+
+	var theUrl = url.parse( req.url );
+	var queryObj = queryString.parse( theUrl.query );
+	var params = JSON.parse( queryObj.jsonParams );
+
+	query.connectionParameters = config.reportConnStr;     
+	var sqlstr = 'select device, package AS pkg, lotid, scd, testgrade, min(startdt) AS startdt, max(enddt) AS enddt, string_agg(ftc, \'-\' order by startdt) AS ftcstr from testtime ';
+	//console.log(params);
+	$.each(params, function(){
+			switch(this.name){
+					 case 'device': sqlstr +=  'where device=\'' + this.value+ '\' ';  break;
+
+					 case 'package': if(this.value != '-')  sqlstr += 'and package=\'' + this.value+ '\' ';  break;
+
+					 case 'grade': 	if(this.value != '-')  sqlstr += 'and lower(testgrade)=\'' + this.value.toLowerCase() + '\' ';  break;
+
+					 case 'group':  if(this.value != '-')  sqlstr += 'and lower(testgroup)=\'' + this.value.toLowerCase() + '\' ';  break;
+
+					 case 'tp':   if(this.value.indexOf('non-LV') !=-1)  sqlstr += ' and lower(testprog) not like \'%lv%\' '; 
+												if(this.value.indexOf('only-LV') !=-1) sqlstr += ' and lower(testprog) like \'%lv%\' '; 
+												break;
+			}
+	});
+	sqlstr += ' group by device, package, lotid, scd, testgrade order by min(startdt)';
+
+	console.log(sqlstr);
+
+	query(sqlstr, function(err, rows, result) {
+			assert.equal(rows, result.rows);
+			console.log(rows.length + " rows returned.");
+			var tableContent = {};
+			if(rows.length==0) {
+					res.json(tableContent);
+					return;
+			}
+			var aaData = new Array();
+			
+			for (var i = 0; i < rows.length; i++) {   
+				var rowArray = {};
+				rowArray['device'] = rows[i].device;
+				rowArray['package'] = rows[i].pkg;
+				rowArray['testgrade'] = rows[i].testgrade;
+				rowArray['lotid'] = rows[i].lotid;
+				//ftcstr = "SP-SR1-SR2-SQ-SQR1-SQR3"
+				//ftc2 = "SP-SQ"
+				var ftcArray = rows[i].ftcstr.toUpperCase().split("-");
+				var ftc2="";
+
+				$.each(ftcArray, function(i, el){
+					  if(el.indexOf("R")!=-1) return;   //remove retest ftc code
+						var temp = el.replace(/[0-9]*$/, "");  
+						var regex = new RegExp(temp+"$");
+						if(!ftc2.substring(0,ftc2.length-1).match(regex))
+						{
+							ftc2+=temp;
+							ftc2+="-";
+						}
+				});
+				ftc2 = ftc2.slice(0, -1);
+				//console.log(ftcArray + ":" + ftc2);
+				rowArray['FTC-seq'] = ftc2;
+				rowArray['scd'] = rows[i].scd;
+				var monStart = rows[i].startdt.getMonth() +1; //since getMonth() is in [0-11] range
+				rowArray['startDate'] = rows[i].startdt.getFullYear() +'-'+ monStart +'-'+ rows[i].startdt.getDate();
+				var monEnd = rows[i].enddt.getMonth() +1;  //since getMonth() is in [0-11] range
+				rowArray['endDate'] = rows[i].enddt.getFullYear() +'-'+  monEnd +'-'+  rows[i].enddt.getDate();
+				aaData.push(rowArray);
+			}
+			tableContent['aaData'] = aaData;		
+			res.json(tableContent);
+	});
+});
+
+/* AJAX handler for universal query */
+router.get('/universalQuery', function(req, res) {
+
+	var theUrl = url.parse( req.url );
+	var queryObj = queryString.parse( theUrl.query );
+	var params = JSON.parse( queryObj.jsonParams );
+
+	query.connectionParameters = config.mprsConnStr;     
+	console.log(params['type']);
+	//console.log(params['testers']);
+	//console.log(params['value']);
+	
+	
+	switch(params['type']){
+			 case 'lotid':	
+			 			var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
+			 			sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
+			 			getDataFromLotID(sqlstr, function(d) {
+			 				res.json(d);
+			 			});
+			 			break;
+
+			 case 'testerid': 
+						var today = new Date();
+						var SevenDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 7); //Date is in millisecs;
+						var dateStr = SevenDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
+			 			var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
+			 			sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
+			 			sqlstr += ' and lotstartdt>\'' + dateStr + '\'';
+			 			sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt)';
+			 			getDataFromTesterID(sqlstr, function(d) {
+			 				res.json(d);
+			 			});
+			 			break;
+
+			case 'handlerid':
+						var today = new Date();
+						var OneMonthAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in millisecs;
+						var dateStr = OneMonthAgo.toISOString().slice(0, 19).replace('T', ' ');
+						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
+			 			sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\'';
+			 			sqlstr += ' and lotstartdt>\'' + dateStr + '\'';
+			 			sqlstr += ' group by lotid, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt)';
+			 			getDataFromHandlerID(sqlstr, function(d) {
+			 				res.json(d);
+			 			});
+			 			break;
+
+			 case 'deviceid':
+			 			var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
+			 			sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
+			 			sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
+			 			getDataFromDeviceID(sqlstr, function(d) {
+			 				res.json(d);
+			 			});
+			 			break;
+
+			 case 'factory':
+			 			getDataFromFactory(params['testers'], function(d) {
+			 				res.json(d);
+			 			});
+			 			break;
+	}
+	
+});
+
+function getDataFromLotID(sqlstr, cb) {
+		console.log(sqlstr);
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				var data = {};
+				var lotinfo = {};
+				if(rows.length==0) {
+						cb(null);
+				}
+				var aaData = new Array();
+				
+				for (var i = 0; i < rows.length; i++) {
+
+				  if(rows[i].ftc.toUpperCase().indexOf('COR')!=-1)  continue;
+					var rowArray = {};
+					var monStart = rows[i].lotstartdt.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['lotstartdt'] = rows[i].lotstartdt.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstartdt.getDate();
+					lotinfo['lotid'] = rows[i].lotid;
+					lotinfo['deviceid'] = rows[i].deviceid;
+					lotinfo['packageid'] = rows[i].packageid;
+					lotinfo['testgrade'] = rows[i].testgrade;
+
+					rowArray['ftc'] = rows[i].ftc;
+					rowArray['testprogname'] = rows[i].testprogname;
+					rowArray['testgroup'] = rows[i].testgroup;
+					rowArray['temperature'] = rows[i].temperature;
+
+					var rawTesterID = rows[i].testerid.toUpperCase();
+					if(rawTesterID.indexOf('KYEC')!=-1){
+						rowArray['testerid'] = rows[i].testerid.substring(4, rows[i].testerid.length);
+						lotinfo['factory'] = 'KYEC';
+					}else if(rawTesterID.indexOf('XAP')!=-1){
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'XAP';
+					}else if(rawTesterID.charAt(0)=='T'){
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'SPIL';
+					}else {
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'ATK';
+					}
+
+					rowArray['handlerid'] = rows[i].handlerid;
+					rowArray['numofsite'] = rows[i].numofsite;
+					rowArray['masknum'] = rows[i].masknum;
+					rowArray['soaktime'] = rows[i].soaktime;
+					rowArray['xamsqty'] = rows[i].xamsqty;
+					rowArray['scd'] = rows[i].scd;
+					rowArray['speedgrade'] = rows[i].speedgrade;
+					rowArray['loadboardid'] = rows[i].loadboardid;
+					rowArray['checksum'] = rows[i].checksum;
+				
+					aaData.push(rowArray);
+				}
+				data['aaData'] = aaData;	
+				data['lotinfo']	= lotinfo;
+				cb(data);
+		});
+}
+
+function getDataFromTesterID(sqlstr, cb) {
+		console.log(sqlstr);
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				var data = {};
+				var lotinfo = {};
+				if(rows.length==0) {
+						cb(null);
+				}
+				var aaData = new Array();
+				
+				for (var i = 0; i < rows.length; i++) {
+					var rowArray = {};
+					var monStart = rows[i].lotstart.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['lotstartdt'] = rows[i].lotstart.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstart.getDate();
+					rowArray['lotid'] = rows[i].lotid;
+					rowArray['deviceid'] = rows[i].deviceid;
+					rowArray['packageid'] = rows[i].packageid;
+
+					var rawTesterID = rows[i].testerid.toUpperCase();
+					if(rawTesterID.indexOf('KYEC')!=-1){
+						rowArray['testerid'] = rows[i].testerid.substring(4, rows[i].testerid.length);
+						lotinfo['factory'] = 'KYEC';
+					}else if(rawTesterID.indexOf('XAP')!=-1){
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'XAP';
+					}else if(rawTesterID.charAt(0)=='T'){
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'SPIL';
+					}else {
+						rowArray['testerid'] = rows[i].testerid;
+						lotinfo['factory'] = 'ATK';
+					}
+					lotinfo['testerid'] = rowArray['testerid'];
+
+					rowArray['handlerid'] = rows[i].handlerid;
+					rowArray['masknum'] = rows[i].masknum;
+					rowArray['loadboardid'] = rows[i].loadboardid;
+				
+					aaData.push(rowArray);
+				}
+				data['aaData'] = aaData;	
+				data['lotinfo']	= lotinfo;
+				cb(data);
+		});
+}
+
+function getDataFromHandlerID(sqlstr, cb) {
+		console.log(sqlstr);
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				var data = {};
+				var lotinfo = {};
+				if(rows.length==0) {
+						cb(null);
+				}
+				var aaData = new Array();
+				
+				for (var i = 0; i < rows.length; i++) {
+					var rowArray = {};
+					var monStart = rows[i].lotstart.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['lotstartdt'] = rows[i].lotstart.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstart.getDate();
+
+					rowArray['lotid'] = rows[i].lotid;
+					rowArray['deviceid'] = rows[i].deviceid;
+					rowArray['packageid'] = rows[i].packageid;
+
+					var rawTesterID = rows[i].testerid.toUpperCase();
+					if(rawTesterID.indexOf('KYEC')!=-1){
+						rowArray['testerid'] = rows[i].testerid.substring(4, rows[i].testerid.length);
+					}else{
+						rowArray['testerid'] = rows[i].testerid;
+					}
+					rowArray['masknum'] = rows[i].masknum;
+					rowArray['loadboardid'] = rows[i].loadboardid;
+
+					lotinfo['handlerid'] = rows[i].handlerid;
+					aaData.push(rowArray);
+				}
+				data['aaData'] = aaData;	
+				data['lotinfo']	= lotinfo;
+				cb(data);
+		});
+}
+
+function getDataFromDeviceID(sqlstr, cb) {
+		console.log(sqlstr);
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				var data = {};
+				var lotinfo = {};
+				if(rows.length==0) {
+						cb(null);
+				}
+				var aaData = new Array();
+				
+				for (var i = 0; i < rows.length; i++) {
+					var rowArray = {};
+					var monStart = rows[i].startdt.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['startDt'] = rows[i].startdt.getFullYear() +'-'+ monStart +'-'+ rows[i].startdt.getDate();
+
+					var monEnd = rows[i].enddt.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['endDt'] = rows[i].enddt.getFullYear() +'-'+ monEnd +'-'+ rows[i].enddt.getDate();					
+
+					var rawTesterID = rows[i].testerid.toUpperCase();
+					if(rawTesterID.indexOf('KYEC')!=-1){
+						rowArray['testerid'] = rows[i].testerid.substring(4, rows[i].testerid.length);
+					}else{
+						rowArray['testerid'] = rows[i].testerid;
+					}
+
+					rowArray['qty'] = rows[i].qty;
+					lotinfo['deviceid'] = rows[i].deviceid;
+
+					aaData.push(rowArray);
+				}
+				data['aaData'] = aaData;	
+				data['lotinfo']	= lotinfo;
+				cb(data);
+		});
+}
+
+function getDataFromFactory(testers, cb) {
+		var data = {};
+		testers.sort();
+		lastE10stateArray = new Array(); //to clear array upon page refresh
+		async.each(testers, getLastE10Status, function(err) {
+			if (err) return console.error(err);	   
+			data['aaData'] = lastE10stateArray;	
+			cb(data);
+		});
+}
 
 var lastE10stateArray = new Array();
 
 var getLastE10Status = function(testerid, cb) { // called once for each project row	    
 				query('SELECT * FROM e10state WHERE testerid=\''+testerid+'\' ORDER BY startdt DESC LIMIT 1', 
 					function(err, rows, result) {
-					if(err) return cb(err); // let Async know there was an error. Further processing will stop
-					var lastE10state = {};
-					var startdt = new Date(rows[0].startdt);
-					var now = new Date();
-					var timeDiff = (now - startdt)/1000;   //in sec
-					timeDiff = Math.round(timeDiff/3600);  //in hours
-					lastE10state["startdt"] = startdt.toISOString().slice(0,10).replace(/-/g,"");
-					lastE10state["testername"] = testerid;
-					lastE10state["hours_elapsed"] = timeDiff;
-					lastE10state["category"] = rows[0].category;
-					lastE10state["username"] = rows[0].username;
-					lastE10state["reason1"] = rows[0].reason1;
-					lastE10state["reason2"] = rows[0].reason2;
-					lastE10stateArray.push(lastE10state);
-					cb(null); // no error, continue with next projectRow, if any
+							if(err) return cb(err); // let Async know there was an error. Further processing will stop
+							console.log(rows.length + " rows returned.");
+							var lastE10state = {};
+							var startdt = new Date(rows[0].startdt);
+							var now = new Date();
+							var timeDiff = (now - startdt)/1000;   //in sec
+							timeDiff = Math.round(timeDiff/3600);  //in hours
+							lastE10state["startdt"] = startdt.toISOString().slice(0,10).replace(/-/g,"");
+							if(testerid.indexOf('KYEC')!=-1){
+									lastE10state['testername'] = testerid.substring(4, testerid.length);
+							}else{
+									lastE10state['testername'] = testerid;
+							}
+							lastE10state["hours_elapsed"] = timeDiff;
+
+							var reason1 = rows[0].reason1;
+							var reason2 = rows[0].reason2;
+							if(reason1=='none') reason1 = '';
+							if(reason2=='none') reason2 = '';
+							if(rows[0].category.indexOf('Productive')==0) { reason1=''; reason2='';}
+							if((reason1.length + reason2.length)==0)
+									lastE10state["category"] = rows[0].category;
+							else 
+									lastE10state["category"] = rows[0].category +' (' + reason1 + ' '+ reason2 + ')';
+
+							lastE10state["username"] = rows[0].username;
+							
+							//then get lotid, deviceid, handlerid, masknum, loadboard from lotintro table
+							var sqlstr = 'SELECT lotstartdt, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro'
+									sqlstr += ' where testerid = \''+testerid+'\'';
+									sqlstr += ' order by lotstartdt DESC LIMIT 1';
+							console.log(sqlstr);
+							query(sqlstr, function(err, rows, result) {
+									if(err) return cb(err); // let Async know there was an error. Further processing will stop
+									assert.equal(rows, result.rows);
+									console.log(rows.length + " rows returned.");
+									lastE10state["deviceid"]  = rows[0].deviceid;
+									lastE10state["packageid"] = rows[0].packageid;
+									lastE10state["handlerid"] = rows[0].handlerid;
+									lastE10state["loadboardid"]	= rows[0].loadboardid;
+									lastE10state["masknum"]			= rows[0].masknum;
+									lastE10stateArray.push(lastE10state);
+									cb(null);
+							});					
+							 // no error, continue with next projectRow, if any
 				});
 };
 
-/* GET data from postgres page. */
-router.get('/KYEC', function(req, res) {
-		query.connectionParameters = 'postgres://MPRS_viewer:MPRS@172.22.150.178/dataloggerDB';      //connecting to xap-opsweb01
-		var testers = new Array();	
-		query('SELECT DISTINCT \"testerid\" AS tester from lotintro', function(err, rows, result) {
-			assert.equal(rows, result.rows);
-			for (var i = 0; i < rows.length; i++) {
-				var testerName = rows[i].tester;
-				if(testerName.match('KYEC*')) {
-					if(testerName.search('XAP')!=-1) continue;  //filter out names like KYECXAP**; those are testing data;
-										testers.push(testerName);
-				}
-			}
-			lastE10stateArray = new Array(); //to clear array upon page refresh
-			async.each(testers, getLastE10Status, function(err) {
-				if (err) return console.error(err);	   
-
-				var lastE10state_93k = new Array();
-				var lastE10state_t2k = new Array();
-				for (var i = 0; i < lastE10stateArray.length; i++) {
-					var testerName = lastE10stateArray[i].testername;
-									if(testerName.search('93K')!=-1){
-										lastE10state_93k.push(lastE10stateArray[i]);
-									}else{
-										lastE10state_t2k.push(lastE10stateArray[i]);
-									}
-				}       		        		        
-				res.render('dal', {t2ktesters:lastE10state_t2k, v93ktesters:lastE10state_93k});	
-			});
-		});
-});
-
-
-/* Display quantity tested per device id since 2011 using d3 */
-/* The query will first select all lot records and their earliest test date (which is the 'P' insertion incoming material quantity);
-   then use {lotid, lotstartdate} to retrieve all 1st insertion lot records, then add up lots per device;
-   then return the 1st 20 device id which tops inocming material quantity;
- */
-router.get('/d3t1', function(req, res) {
-		query.connectionParameters = 'postgres://postgres:postgres@localhost/MPRS_report';      //connecting to localhost
-		var deviceArray = new Array();
-		var sqlstr =   'select distinct t1.device, sum(t1.qtyin) as totalQtyIn, sum(t1.qtyout) as qtyout, substr(device,3,1)'
-							 +	'	from testtime as t1'
-							 +	' inner join'
-							 +	' ('
-							 +	'	select min(startdt) as InitialDT, lotid from testtime group by lotid'
-							 +	'	)t2'
-							 +	'	on( t1.startdt=t2.InitialDT and t1.lotid=t2.lotid)'
-							 +	'	where char_length(t1.device)>0'
-							 +	'	group by t1.device'
-							 +	'	order by totalQtyIn'
-							 +	'	DESC limit 20';
-
-    console.log('>' + sqlstr);
-		query(sqlstr, function(err, rows, result) {
-			assert.equal(rows, result.rows);
-			for (var i = 0; i < rows.length; i++) {
-				var device = {};
-				device.name = rows[i].device;
-				device.value = rows[i].qtyout;
-				deviceArray.push(device);        
-			}
-			res.render('d3t1', {deviceArray:deviceArray});						
-		});
-});
-
-/* Display the page to query test time */
-router.get('/tt1', function(req, res) {
-			query.connectionParameters = 'postgres://postgres:postgres@localhost/MPRS_report';      //connecting to localhost
-			var packageArray = new Array();
-			var devPkg = {};
-			var pkgList = new Array();
-			var sitesArray = new Array();
-			var testgradeArray = new Array();
-			var testgroupArray = new Array();
-
-			async.parallel([ 
-				function(callback) {
-						var sqlstr = 'select DISTINCT device, package as pkg from testtime where char_length(device)>0 order by device';
-						query(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
-							for (var i = 0; i < rows.length; i++) {  
-								if(rows[i].device in devPkg)
-									devPkg[rows[i].device].push(rows[i].pkg); 
-								else 
-									devPkg[rows[i].device] = new Array(rows[i].pkg);    
-							}
-
-							callback();
-						});
-				}, 
-				function(callback) {
-						var sqlstr = 'select DISTINCT package as pkg from testtime';
-						query(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
-							for (var i = 0; i < rows.length; i++) {
-								packageArray.push(rows[i].pkg);        
-							}
-							callback();
-						});
-				},
-				function(callback) {
-						var sqlstr = 'select DISTINCT actualnumofsites from testtime';
-						query(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
-							for (var i = 0; i < rows.length; i++) {
-								sitesArray.push(rows[i].actualnumofsites);        
-							}
-							callback();
-						});
-				},
-				function(callback) {
-						var sqlstr = 'select DISTINCT testgrade from testtime';
-						query(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
-							for (var i = 0; i < rows.length; i++) {
-								testgradeArray.push(rows[i].testgrade);        
-							}
-							callback();
-						});
-
-				},
-				function(callback) {
-						var sqlstr = 'select DISTINCT testgroup from testtime';
-						query(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
-							for (var i = 0; i < rows.length; i++) {
-								testgroupArray.push(rows[i].testgroup);        
-							}
-							callback();
-						});
-				}], 
-				function(err, results) {
-					if (err) {
-							throw err;
-					}
-					packageArray.sort();
-					sitesArray.sort();
-					testgradeArray.sort();
-					testgroupArray.sort();
-					console.log('now all query done, yeah!');
-					res.render('tt1', {devPkg:devPkg,packageArray:packageArray, sitesArray:sitesArray, testgradeArray:testgradeArray, testgroupArray:testgroupArray });								
-				});
-});
-
-/* AJAX handler for test time query */
-router.get('/queryTT', function(req, res) {
-
-	var theUrl = url.parse( req.url );
-	var queryObj = queryString.parse( theUrl.query );
-	var params = JSON.parse( queryObj.jsonParams );
-
-  query.connectionParameters = 'postgres://postgres:postgres@localhost/MPRS_report';      //connecting to localhost
-  var sqlstr = 'select device, testprog, package as pkg, testgrade, testgroup, sum(qtyin) AS qtyin, sum(qtyout) qtyout, round(Avg(testtime)::numeric,2) as tt from testtime'
-  						+' where device=\'' + params[0].value + '\''
-							+ ( (params[1].value=='-')? '': 'and package=\'' + params[1].value + '\'')
-							+ ( (params[2].value=='-')? '': 'and actualnumofsites=\'' + params[2].value + '\'')
-							+ ( (params[3].value=='-')? '':' and testgrade=\'' + params[3].value + '\'')
-							+ ( (params[4].value=='-')? '':' and testgroup=\'' + params[4].value + '\'')
-							+' group by device,testprog, package, testgrade, testgroup';
-							+' order by testprog, testgroup,package';
-	//console.log(sqlstr);
-
-	query(sqlstr, function(err, rows, result) {
-			assert.equal(rows, result.rows);
-			console.log(rows.length + " rows returned.");
-			var responseHTML = '<table id="testTimeTable1"  class="display" cellspacing="0" width="100%">';
-			responseHTML += '<thead>';
-			responseHTML += '<tr>';
-			responseHTML += '<th>device';
-			responseHTML += '<th>testprog';
-			responseHTML += '<th>package';
-			responseHTML += '<th>testgrade';
-			responseHTML += '<th>testgroup';
-			responseHTML += '<th>qtyin';
-			responseHTML += '<th>qtyout';
-			responseHTML += '<th>test time';
-			responseHTML += '</tr>';
-			responseHTML += '</thead>';
-			responseHTML += '<tfoot>';
-			responseHTML += '<tr>';
-			responseHTML += '<th>device';
-			responseHTML += '<th>testprog';
-			responseHTML += '<th>package';
-			responseHTML += '<th>testgrade';
-			responseHTML += '<th>testgroup';
-			responseHTML += '<th>qtyin';
-			responseHTML += '<th>qtyout';
-			responseHTML += '<th>test time';
-			responseHTML += '</tr>';
-			responseHTML += '</tfoot>';
-			responseHTML += '<tbody>';
-			
-			for (var i = 0; i < rows.length; i++) {   
-			 	responseHTML += '<tr>';
-			 	responseHTML += '<td>' + rows[i].device;
-			 	responseHTML += '<td>' + rows[i].testprog;
-			 	responseHTML += '<td>' + rows[i].pkg;
-			 	responseHTML += '<td>' + rows[i].testgrade;
-			 	responseHTML += '<td>' + rows[i].testgroup;
-			 	responseHTML += '<td>' + rows[i].qtyin;
-			 	responseHTML += '<td>' + rows[i].qtyout;
-			 	responseHTML += '<td>' + rows[i].tt;   	
-			 	responseHTML +='</tr>';
-			}
-			responseHTML += '</tbody>';
-			responseHTML += '</table>';
-			
-			res.writeHead(200, {'content-type': 'text/html' });
-			res.write(responseHTML);
-			res.end('\n');						
-	});
-})
 module.exports = router;

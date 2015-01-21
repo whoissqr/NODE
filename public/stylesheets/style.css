@@ -1,8 +1,113 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "sans-serif", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+.displayButton{
+	width: 175px;
+	height: 25px;
+}
+
+td, th { text-align: left }
+
+#ttResult td:nth-child(2) {
+    text-align: left;
+}
+
+.ui-textfield {
+	font: inherit;
+	color: inherit;
+	background: none;
+	text-align: inherit;
+	outline: none;
+	cursor: text;
+}
+
+.center {
+	position: fixed;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -80%);
+}
+
+#custom-templates .empty-message {
+	padding: 5px 10px;
+	text-align: center;
+}
+
+#custom-templates {
+	float: left;
+	padding-right: 20px;
+}
+
+#custom-templates .typeahead{
+	float: left;
+	padding-right: 20px;
+	height: 30px;
+}
+
+#btn_search_query{
+	float: left;
+	padding-left: 20px;
+	padding-right: 20px;
+	height: 33px;
+}
+
+/* typeahead related CSS start */
+.tt-query, /* UPDATE: newer versions use tt-input instead of tt-query */
+
+.tt-input {
+	font-size: 20px;
+}
+
+.tt-hint {
+	width: 396px;
+	height: 30px;
+	padding: 8px 12px;
+	font-size: 20px;
+	font: Helvetica;
+	line-height: 30px;
+	border: 2px solid #ccc;
+	border-radius: 8px;
+	outline: none;
+}
+
+.tt-query { /* UPDATE: newer versions use tt-input instead of tt-query */
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-dropdown-menu {
+	width: 422px;
+	margin-top: 12px;
+	padding: 8px 0;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+	padding: 3px 20px;
+	font-size: 18px;
+	line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+	color: #fff;
+	background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+	margin: 0;
+}
+
+.tt-cursor{
+	color:#0033FF;
+}
+/* typeahead related CSS end */

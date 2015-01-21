@@ -1,0 +1,6 @@
+
+{
+    "mprsConnStr" : "postgres://MPRS_viewer:MPRS@172.22.150.178/dataloggerDB",
+    "LocalreportConnStr" : "postgres://postgres:postgres@localhost/MPRS_report",
+    "reportConnStr" : "postgres://chaoshi:111@172.22.150.201/MPRS_report"
+}
