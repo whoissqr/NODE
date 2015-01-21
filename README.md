@@ -41,7 +41,7 @@ app.use('/search', search);                 //line 2
 
 Line 2 above is matching URL with route, and line 1 is defining the file path ('./routes/search') for the route.
 
-Then let's open routes/search.js, we will find the below code snippet
+Then let's open [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js), we will find the below code snippet
 
 ```JavaScript
 router.get('/', function(req, res) {
@@ -57,7 +57,7 @@ module.exports = router;
 OK, what we are doing here is pretty much simple -- we need to prepare some data before we actually rendering the web page.
 When we are ready, we will do a res.render(....), which means to respond the URL (/search) with a JADE page (search.jade) and several variables attaching to it.
 
-Now open the JADE file (views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.  
+Now open the JADE file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade); finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.  
 
 Ok, here is the question -- how do we render those javascript Array in HTML code and handler user interactions dynamically?
 	
