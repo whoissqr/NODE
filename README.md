@@ -14,7 +14,7 @@ graphical (d3.js) or tabular (Datatable) form .
 
 | NODE libs  | description | links |
 | :------------ |:------------| :------------|
-| express       | Fast, unopinionated, minimalist web framework for Node.js                                                               | http://expressjs.com/ |
+| [express](http://expressjs.com/)       | Fast, unopinionated, minimalist web framework for Node.js                                                               | http://expressjs.com/ |
 | pg-query      | database interface to PostgresSQL                                                                                       | https://github.com/brianc/node-pg-query |
 | async         | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript. | https://github.com/caolan/async |
 | d3            | a JavaScript library for manipulating documents based on data.                                                          | http://d3js.org/ |
