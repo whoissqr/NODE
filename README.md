@@ -20,14 +20,16 @@ graphical (d3.js) or tabular (Datatable) form .
 	   - Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
 #How to read those bunch of code?
+
 Some basic understanding about Express folder structure is helpful. To me, most frequently access folder are 
-	- app.js       this is like an entry point.
-	- routes	   well, those are where the page URL being routed to.
-	- public	   this contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
-					public/javascripts which i used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
-	- views   	   All those JADE files.
-	- config.json  this is where I store DB login credentials.
-	- packge.json  this is where Express configures the back end JavaScript modules.
+
+- app.js       this is like an entry point.
+- routes	   well, those are where the page URL being routed to.
+- public	   this contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
+				public/javascripts which i used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
+- views   	   All those JADE files.
+- config.json  this is where I store DB login credentials.
+- packge.json  this is where Express configures the back end JavaScript modules.
 
 Ok, let me start with an example, I have a page called http://localhost:3000/search
 You will see these two lines of code somewhere in app.js:
