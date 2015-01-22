@@ -110,9 +110,37 @@ $(function() {
                 $('#pkg').show();
             }
 ```
-Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to index.js [universalQuery](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
+Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-If the AJAX request is successfully processed, the reply will be returned as a JSON object ('reply'); 
+** Let's look at index.js, 
+```JavaScript
+/* AJAX handler for universal query */
+router.get('/universalQuery', function(req, res) {
+
+  var theUrl = url.parse( req.url );
+  var queryObj = queryString.parse( theUrl.query );
+  var params = JSON.parse( queryObj.jsonParams );
+
+  query.connectionParameters = config.mprsConnStr;     
+  console.log(params['type']);
+  //console.log(params['testers']);
+  //console.log(params['value']);
+  
+  
+  switch(params['type']){
+       case 'lotid':  
+            var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
+            sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
+            getDataFromLotID(sqlstr, function(d) {
+              res.json(d);
+            });
+            break;
+            ....
+  }
+});
+```
+
+If the AJAX request is successfully processed, the reply will be returned as a JSON object ('reply'); Here is how the data is rendered in table form.
 ```JavaScript
 var columns = [
   {"sTitle": "lotstartdt",  "mData": "lotstartdt"}, 
