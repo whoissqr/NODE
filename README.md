@@ -86,14 +86,15 @@ $(function() {
     // --- front end AJAX handler for universal query [lotid]
     $("#btn_search_query").click(function(e){
       e.preventDefault();
-      ...     
+      ...
+      params['value'] = userInput;  
       if($.inArray(userInput, recentLotArray)!=-1) params['type'] = 'lotid';
       else if
       ...
       else if($.isNumeric(userInput)) params['type'] = 'lotid';
 
       $.ajax({
-      url: 'universalQuery',   //routed to index.js
+        url: 'universalQuery',   //routed to index.js
         type: 'GET',
         data: {jsonParams:JSON.stringify(params)},
         contentType: 'application/json',                  
@@ -102,30 +103,37 @@ $(function() {
             //for lotid based query result display to datatable
             if(params['type'] == 'lotid')
             {
-                var columns = [
-                  {"sTitle": "lotstartdt",  "mData": "lotstartdt"}, 
-                  {"sTitle": "ftc",         "mData": "ftc"}, 
-                  {"sTitle": "tester",      "mData": "testerid"}, 
-                  {"sTitle": "handler",     "mData": "handlerid"}, 
-                  {"sTitle": "qty",         "mData": "xamsqty"}, 
-                  {"sTitle": "testprogname","mData": "testprogname"}, 
-                  {"sTitle": "testgroup",   "mData": "testgroup"}, 
-                  {"sTitle": "speed",       "mData": "speedgrade"}, 
-                  {"sTitle": "temperature", "mData": "temperature"}, 
-                  {"sTitle": "masknum",     "mData": "masknum"}, 
-                  {"sTitle": "loadboard",   "mData": "loadboardid"}
-                ];
-                //refer to table property: http://legacy.datatables.net/ref
-                var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-                          "destroy":true,
-                          "aoColumns": columns,
-                          "aaData": reply['aaData'],
-                          "aaSorting":[],
-                          "iDisplayLength": 100                         
-                });   
+                //render data in jQuery table form
+                .......  
                 $('#lotid').text(reply['lotinfo']['lotid']);
                 ...
                 $('#pkg').show();
             }
 ```
-	
+Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to index.js [universalQuery](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
+
+If the AJAX request is successfully processed, the reply will be returned as a JSON object ('reply'); 
+```JavaScript
+var columns = [
+  {"sTitle": "lotstartdt",  "mData": "lotstartdt"}, 
+  {"sTitle": "ftc",         "mData": "ftc"}, 
+  {"sTitle": "tester",      "mData": "testerid"}, 
+  {"sTitle": "handler",     "mData": "handlerid"}, 
+  {"sTitle": "qty",         "mData": "xamsqty"}, 
+  {"sTitle": "testprogname","mData": "testprogname"}, 
+  {"sTitle": "testgroup",   "mData": "testgroup"}, 
+  {"sTitle": "speed",       "mData": "speedgrade"}, 
+  {"sTitle": "temperature", "mData": "temperature"}, 
+  {"sTitle": "masknum",     "mData": "masknum"}, 
+  {"sTitle": "loadboard",   "mData": "loadboardid"}
+];
+//refer to table property: http://legacy.datatables.net/ref
+var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+          "destroy":true,
+          "aoColumns": columns,
+          "aaData": reply['aaData'],
+          "aaSorting":[],
+          "iDisplayLength": 100                         
+});
+```
+
