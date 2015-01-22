@@ -1,11 +1,9 @@
-NODE
-====
 
-#sample CRUD application using NODEJS with PostgreSQL
+#A sample CRUD web application to access PostgreSQL using NODEJS and TypeAhead
 
 
-This is an extremely simple NODEJS application built on top of Express. It connects to a PostgreSQL server and display some database rows in 
-graphical (d3.js) or tabular (Datatable) form .
+This is an extremely simple NODEJS application built on top of Express and Twitter TypeAhead. It connects to a PostgreSQL server and display some database rows in 
+graphical (d3.js) or tabular (Datatable) form.
 
 ##What do you need?
 1. NODES itself. 
@@ -20,7 +18,8 @@ graphical (d3.js) or tabular (Datatable) form .
   | [d3](http://d3js.org/)           | a JavaScript library for manipulating documents based on data.                                                                 |  
   | [lodash](https://lodash.com/)        | A utility library delivering consistency, customization, performance, & extras.                                            | 
   | [jquery](http://jquery.com/)        | a fast, small, and feature-rich JavaScript library.                                                                         | 
-  | [node-windows](https://github.com/coreybutler/node-windows )  | a library which helps to wrap Node.js server in windows service form.                             | 
+  | [node-windows](https://github.com/coreybutler/node-windows )  | a library which helps to wrap Node.js server in windows service form. | 
+  | [typeahea.js](http://twitter.github.io/typeahead.js/) | a flexible JavaScript library that provides a strong foundation for building robust typeaheads. |
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
