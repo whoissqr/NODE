@@ -1,5 +1,5 @@
 
-#A sample CRUD web application to access PostgreSQL using NODEJS and TypeAhead
+#A sample CRUD webpage using NODEJS and TypeAhead
 
 
 This is an extremely simple NODEJS application built on top of Express and Twitter TypeAhead. It connects to a PostgreSQL server and display some database rows in 
@@ -24,6 +24,8 @@ graphical (d3.js) or tabular (Datatable) form.
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 	- Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
+
+##What does it do?
 
 ##How is the code organized?
 
@@ -79,5 +81,51 @@ script(type='text/javascript').
 ```
 	
 **Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to take a look at the front end logic.
-	
+```JavaScript
+$(function() {
+    // --- front end AJAX handler for universal query [lotid]
+    $("#btn_search_query").click(function(e){
+      e.preventDefault();
+      ...     
+      if($.inArray(userInput, recentLotArray)!=-1) params['type'] = 'lotid';
+      else if
+      ...
+      else if($.isNumeric(userInput)) params['type'] = 'lotid';
+
+      $.ajax({
+      url: 'universalQuery',   //routed to index.js
+        type: 'GET',
+        data: {jsonParams:JSON.stringify(params)},
+        contentType: 'application/json',                  
+        success: function(reply) {
+            console.log('AJAX reply success:');   
+            //for lotid based query result display to datatable
+            if(params['type'] == 'lotid')
+            {
+                var columns = [
+                  {"sTitle": "lotstartdt",  "mData": "lotstartdt"}, 
+                  {"sTitle": "ftc",         "mData": "ftc"}, 
+                  {"sTitle": "tester",      "mData": "testerid"}, 
+                  {"sTitle": "handler",     "mData": "handlerid"}, 
+                  {"sTitle": "qty",         "mData": "xamsqty"}, 
+                  {"sTitle": "testprogname","mData": "testprogname"}, 
+                  {"sTitle": "testgroup",   "mData": "testgroup"}, 
+                  {"sTitle": "speed",       "mData": "speedgrade"}, 
+                  {"sTitle": "temperature", "mData": "temperature"}, 
+                  {"sTitle": "masknum",     "mData": "masknum"}, 
+                  {"sTitle": "loadboard",   "mData": "loadboardid"}
+                ];
+                //refer to table property: http://legacy.datatables.net/ref
+                var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+                          "destroy":true,
+                          "aoColumns": columns,
+                          "aaData": reply['aaData'],
+                          "aaSorting":[],
+                          "iDisplayLength": 100                         
+                });   
+                $('#lotid').text(reply['lotinfo']['lotid']);
+                ...
+                $('#pkg').show();
+            }
+```
 	
