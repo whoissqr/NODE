@@ -25,7 +25,7 @@ graphical (d3.js) or tabular (Datatable) form.
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 	- Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
-##How to read those bunch of code?
+##How is the code organized?
 
 Some basic understanding about Express folder structure is helpful. To me, most frequently access folder are 
 
