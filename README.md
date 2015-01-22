@@ -112,7 +112,7 @@ $(function() {
 ```
 Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-** Let's look at index.js, 
+**Let's look at index.js, 
 ```JavaScript
 /* AJAX handler for universal query */
 router.get('/universalQuery', function(req, res) {
