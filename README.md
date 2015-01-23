@@ -111,7 +111,7 @@ $(function() {
 ```
 Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-**Let's go to [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js)**, 
+**Let's look at the AJAX request handler in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js)**, 
 ```JavaScript
 /* AJAX handler for universal query */
 router.get('/universalQuery', function(req, res) {
@@ -139,7 +139,42 @@ router.get('/universalQuery', function(req, res) {
 });
 ```
 
-If the AJAX request is successfully processed, the reply will be returned as a JSON object ('reply'); Here is how the data is rendered in table form.
+**Then how do we query the database using the sql string?**
+function getDataFromLotID(sqlstr, cb) {
+		console.log(sqlstr);
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				var data = {};
+				var lotinfo = {};
+				if(rows.length==0) {
+						cb(null);
+				}
+				var aaData = new Array();
+				
+				for (var i = 0; i < rows.length; i++) {
+
+				  if(rows[i].ftc.toUpperCase().indexOf('COR')!=-1)  continue;
+					var rowArray = {};
+					var monStart = rows[i].lotstartdt.getMonth() +1; //since getMonth() is in [0-11] range
+					rowArray['lotstartdt'] = rows[i].lotstartdt.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstartdt.getDate();
+					lotinfo['lotid'] = rows[i].lotid;
+					lotinfo['deviceid'] = rows[i].deviceid;
+					...
+
+					rowArray['handlerid'] = rows[i].handlerid;
+					rowArray['numofsite'] = rows[i].numofsite;
+					rowArray['masknum'] = rows[i].masknum;
+					...				
+					aaData.push(rowArray);
+				}
+				data['aaData'] = aaData;	
+				data['lotinfo']	= lotinfo;
+				cb(data);
+		});
+}
+
+If the AJAX request is successfully processed, the database result set will be returned as a JSON object ('reply'); Here is how the data is rendered in table form.
 ```JavaScript
 var columns = [
   {"sTitle": "lotstartdt",  "mData": "lotstartdt"}, 
@@ -156,11 +191,11 @@ var columns = [
 ];
 //refer to table property: http://legacy.datatables.net/ref
 var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-          "destroy":true,
-          "aoColumns": columns,
-          "aaData": reply['aaData'],
-          "aaSorting":[],
-          "iDisplayLength": 100                         
+	          "destroy":true,
+	          "aoColumns": columns,
+	          "aaData": reply['aaData'],
+	          "aaSorting":[],
+	          "iDisplayLength": 100                         
 });
 ```
 
