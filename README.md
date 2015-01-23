@@ -4,7 +4,7 @@
 
 This is an extremely simple NODEJS project. It accepts user text input and connects to a PostgreSQL server and display some database rows in 
 graphical (d3.js) or tabular (Datatable) form.
-
+##What does it do?
 ##Tools and setup
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
@@ -23,8 +23,6 @@ graphical (d3.js) or tabular (Datatable) form.
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
-
-##What does it do?
 
 ##How does it work together?
 
