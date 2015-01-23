@@ -140,6 +140,7 @@ router.get('/universalQuery', function(req, res) {
 ```
 
 **Then how do we query the database using the sql string?**
+```JavaScript
 function getDataFromLotID(sqlstr, cb) {
 		console.log(sqlstr);
 		query(sqlstr, function(err, rows, result) {
@@ -173,6 +174,7 @@ function getDataFromLotID(sqlstr, cb) {
 				cb(data);
 		});
 }
+```
 
 If the AJAX request is successfully processed, the database result set will be returned as a JSON object ('reply'); Here is how the data is rendered in table form.
 ```JavaScript
