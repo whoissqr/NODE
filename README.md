@@ -61,10 +61,10 @@ router.get('/', function(req, res) {
 });
 module.exports = router;
 ```
-OK, what we are doing here is pretty much simple - we prepare some data and then render the web form to prompt user for input;
+OK, what we are doing here is pretty simple - we prepare some data and then render the web form to prompt user for input;
 res.render(....), is to respond the URL (/search) with a Jade page [search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade) and several variables attaching to it.
 
-**Now open the Jade file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade)**; finally, here we are, some html kind of stuff. Jade is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and we will see the familiar HTML content on the left.
+**Now open the Jade file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade)**; finally, here we are, some html kind of stuff. Jade is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the text box on the right, and you will see the corresponding HTML content on the left.
 
 Ok, here is the question -- how do we use those javascript Array in HTML code and handler user interactions dynamically?
 
@@ -111,7 +111,7 @@ $(function() {
 ```
 Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-**Let's go to [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js), 
+**Let's go to [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js)**, 
 ```JavaScript
 /* AJAX handler for universal query */
 router.get('/universalQuery', function(req, res) {
