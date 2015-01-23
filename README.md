@@ -2,13 +2,13 @@
 #A sample CRUD webpage using NODEJS and TypeAhead
 
 
-This is an extremely simple NODEJS application built on top of Express and Twitter TypeAhead. It connects to a PostgreSQL server and display some database rows in 
+This is an extremely simple NODEJS project. It accepts user text input and connects to a PostgreSQL server and display some database rows in 
 graphical (d3.js) or tabular (Datatable) form.
 
-##What do you need?
+##Tools and setup
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
-3. misc NODE open source libraries. Don't re-invent the wheels.
+3. Install misc NODE open source libraries. Don't re-invent the wheels!
 
   | NODE libs  | description |
   | :------------ |:------------|
@@ -23,23 +23,22 @@ graphical (d3.js) or tabular (Datatable) form.
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
-	- Another one, Firebug, a google chrome plugin. I installed this one, and it seems powerful, but I haven't used it much yet. No comment.
 
 ##What does it do?
 
-##How is the code organized?
+##How does it work together?
 
-Some basic understanding about Express folder structure is helpful. To me, most frequently access folder are 
+Some basic understanding about Express folder structure is helpful. To me, most frequently accessed files and folders are 
 
 - app.json-- This is like an entry point.
 - routes  -- Well, those are where the page URL being routed to.
 - public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
-				public/javascripts which i used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
-- views -- All those JADE files.
-- config.json -- This is where I store DB login credentials.
+				public/javascripts which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
+- views -- All those Jade files.
+- config.json -- This is where I store my database login credentials.
 - packge.json -- This is where Express configures the back end JavaScript modules.
 
-**Ok, let me start with an example**, I need page called http://localhost:3000/search
+**Ok, let me start with the URL**, http://localhost:3000/search
 You will see these two lines of code somewhere in [app.js](https://github.com/whoissqr/NODE/blob/master/app.js):
 
 ```JavaScript
@@ -47,13 +46,13 @@ var search = require('./routes/search');    //line 1
 app.use('/search', search);                 //line 2
 ```
 
-Line 2 above is matching URL with route, and line 1 is defining the file path ('./routes/search') for the route.
+Line 2 here is matching URL with route, and line 1 is defining the file path [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js) for the route.
 
-**Then let's open [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js)**, we will find the below code snippet
+**Then let's open [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js)** to take a look, we will find the below code snippet
 
 ```JavaScript
 router.get('/', function(req, res) {
-	......              //prepare data before http response
+	...						//prepare data before http response
 	res.render('search', 	testerArray:testerArray, 
 							handlerArray:handlerArray, 
 							deviceArray:deviceArray, 
@@ -62,25 +61,25 @@ router.get('/', function(req, res) {
 });
 module.exports = router;
 ```
-OK, what we are doing here is pretty much simple -- we need to prepare some data before we actually rendering the web page.
-When we are ready, we will do a res.render(....), which means to respond the URL (/search) with a JADE page (search.jade) and several variables attaching to it.
+OK, what we are doing here is pretty much simple - we prepare some data and then render the web form to prompt user for input;
+res.render(....), is to respond the URL (/search) with a Jade page [search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade) and several variables attaching to it.
 
-**Now open the JADE file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade)**; finally, here we are, some html kind of stuff here. JADE is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and it will show the HTML content on the left side.  
+**Now open the Jade file [views/search.jade](https://github.com/whoissqr/NODE/blob/master/views/search.jade)**; finally, here we are, some html kind of stuff. Jade is basically some template for HTML. how to interpret those? a quick and easy way, go to [html2jade](http://html2jade.org/) , copy the jade file content to the right text box, and we will see the familiar HTML content on the left.
 
-Ok, here is the question -- how do we render those javascript Array in HTML code and handler user interactions dynamically?
+Ok, here is the question -- how do we use those javascript Array in HTML code and handler user interactions dynamically?
 
-Firstly, we need to expose the variable to some front end logic writtent in JavaScript. We do this in JADE; here is the code snippet; 
+First, we need to expose the variable to some front end logic writtent in JavaScript. We do this in Jade; here is the code snippet; 
 ```JavaScript
-script(src='/front_JS/searchFrontEnd.js')   //include this javascript code in jade
+script(src='/front_JS/searchFrontEnd.js')   //front end logic in JavaScript
 
 script(type='text/javascript').
-  var recentLotArray =!{JSON.stringify(recentLotArray)};    //pass variable to javascript code
-  var testerArray =!{JSON.stringify(testerArray)};          //pass variable to javascript code
-  var handlerArray =!{JSON.stringify(handlerArray)};        //pass variable to javascript code
-  var deviceArray =!{JSON.stringify(deviceArray)};          //pass variable to javascript code
+  var recentLotArray =!{JSON.stringify(recentLotArray)};     
+  var testerArray =!{JSON.stringify(testerArray)};           
+  var handlerArray =!{JSON.stringify(handlerArray)};         
+  var deviceArray =!{JSON.stringify(deviceArray)};           
 ```
 	
-**Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to take a look at the front end logic.
+**Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to examine the front end logic.
 ```JavaScript
 $(function() {
     // --- front end AJAX handler for universal query [lotid]
@@ -112,7 +111,7 @@ $(function() {
 ```
 Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-**Let's look at index.js, 
+**Let's go to [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js), 
 ```JavaScript
 /* AJAX handler for universal query */
 router.get('/universalQuery', function(req, res) {
