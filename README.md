@@ -1,11 +1,27 @@
 
 #A sample CRUD webpage using NODEJS and TypeAhead
 
+This is a rather simple NODEJS project. It accepts user text input and connects to a PostgreSQL server and display some database rows in 
+graphical (d3.js) or tabular (Datatables) form.
 
-This is an extremely simple NODEJS project. It accepts user text input and connects to a PostgreSQL server and display some database rows in 
-graphical (d3.js) or tabular (Datatable) form.
 ##What does it do?
+
+The project source code can be found here: [NODE](https://github.com/whoissqr/NODE)
+
+The page http://localhost:3000/search will show a text input box and a 'Submit' button upon page load.
+
+![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
+
+When user keys in few characters, the Twitter typeahead library will prompt user with multiple hints from a few different data sources based on string partial matching,
+
+![typeahead](https://github.com/whoissqr/NODE/blob/master/pic/Typeahead_lot.jpg)
+
+The page will return the data using AJAX and present the row data in table forms (jquery.dataTables.min.js)
+
+![Data shown in table](https://github.com/whoissqr/NODE/blob/master/pic/table.jpg)
+
 ##Tools and setup
+
 1. NODES itself. 
 2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
 3. Install misc NODE open source libraries. Don't re-invent the wheels!
@@ -20,6 +36,7 @@ graphical (d3.js) or tabular (Datatable) form.
   | [jquery](http://jquery.com/)        | a fast, small, and feature-rich JavaScript library.                                                                         | 
   | [node-windows](https://github.com/coreybutler/node-windows )  | a library which helps to wrap Node.js server in windows service form. | 
   | [typeahea.js](http://twitter.github.io/typeahead.js/) | a flexible JavaScript library that provides a strong foundation for building robust typeaheads. |
+  | [DataTables](http://www.datatables.net/) | DataTables is a plug-in for the jQuery Javascript library, which adds interaction control to any HTML table. |
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
