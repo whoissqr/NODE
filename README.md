@@ -219,8 +219,8 @@ Before page (http://localhost:3000/search) is loaded, we already made a trip to 
 In addition, we load a few front end libraries to the browser.
 ```JavaScript
 script(src='/javascripts/typeahead.bundle.js')      //this is a bundle lib which includes both Bloodhound and Typeahead.
-script(src='/javascripts/handlebars-v2.0.0.js')     //
-script(src='/front_JS/searchFrontEnd.js')   //front end logic in JavaScript
+script(src='/javascripts/handlebars-v2.0.0.js')     //this can help to convert html template to functions
+script(src='/front_JS/searchFrontEnd.js')           //front end logic in JavaScript
 
 script(type='text/javascript').
   var recentLotArray =!{JSON.stringify(recentLotArray)};     
@@ -273,12 +273,28 @@ $(document).ready(function() {
     {
       ...
     },    
-    {
       ...
-    },
-    {
-      ...
-    }
     );
 });
 ```
+
+To move one step further, for certain data sources, we wish to make a partial match with any substring (not just the prefix),
+```JavaScript
+var houndTesterID = new Bloodhound({
+  datumTokenizer: function(d) {
+    var test = Bloodhound.tokenizers.whitespace(d.value);
+        $.each(test,function(k,v){
+            i = 0;
+            while( (i+1) < v.length ){
+                test.push(v.substr(i,v.length));
+                i++;
+            }
+        })
+        return test;
+  },
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  local: $.map(testerArray, function(state) { return { value: state }; })
+});
+```
+
+so in this way, a user input ('T2K') can be mapped to source string like 'XAPT2K1'.
