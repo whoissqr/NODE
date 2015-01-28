@@ -36,6 +36,7 @@ When 'Submit' button is clicked, form data is sumbitted to backend Node.js and r
   | [node-windows](https://github.com/coreybutler/node-windows)  | A library which helps to wrap Node.js server in windows service form. | 
   | [typeahea.js](http://twitter.github.io/typeahead.js/) | a flexible JavaScript library that provides a strong foundation for building robust typeaheads. |
   | [DataTables](http://www.datatables.net/) | DataTables is a plug-in for the jQuery Javascript library, which adds interaction control to any HTML table. |
+  | [handlebars](http://handlebarsjs.com/) | Handlebars provides the power necessary to let you build semantic templates effectively with no frustration. |
 
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
@@ -213,8 +214,12 @@ var otable = $('#ttResult').html('<table class="display"></table>').children('ta
 ```
 
 **Ok, back to the question, how do we implement a typeahead for the text input field?**
-Before page is loaded, we already made a trip to the database server and cached a few data arrays in JavaScript.
+
+Before page (http://localhost:3000/search) is loaded, we already made a trip to the database server and cached a few data arrays in JavaScript.
+In addition, we load a few front end libraries to the browser.
 ```JavaScript
+script(src='/javascripts/typeahead.bundle.js')      //this is a bundle lib which includes both Bloodhound and Typeahead.
+script(src='/javascripts/handlebars-v2.0.0.js')     //
 script(src='/front_JS/searchFrontEnd.js')   //front end logic in JavaScript
 
 script(type='text/javascript').
@@ -238,23 +243,11 @@ $(document).ready(function() {
     ...
     });
 
-    var houndTesterID = new Bloodhound({
     ...
-    });
-
-    var houndHandlerID = new Bloodhound({
-    ...
-    });
-
-    var houndDeviceID = new Bloodhound({
-    ...
-    });
      
     houndLotID.initialize();
     houndTesterID.initialize();
-    houndHandlerID.initialize();
-    houndDeviceID.initialize();
-    houndFactory.initialize();
+    ...
      
     $('#custom-templates .typeahead').typeahead({
       hint: false,
