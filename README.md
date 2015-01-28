@@ -1,8 +1,7 @@
 
-#A sample CRUD webpage using NODEJS and TypeAhead
+#A sample CRUD webpage using Node.js and TypeAhead
 
-This is a rather simple NODEJS project. It accepts user text input and connects to a PostgreSQL server and display some database rows in 
-graphical (d3.js) or tabular (Datatables) form.
+This is a rather straightforward Node.js project. It accepts user text input and connects to a PostgreSQL server to retrieve some database rows, and display the data in graphical (d3.js) or tabular (Datatables) form.
 
 ##What does it do?
 
@@ -23,8 +22,8 @@ The page will return the data using AJAX and present the row data in table forms
 ##Tools and setup
 
 1. NODES itself. 
-2. A good editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
-3. Install misc NODE open source libraries. Don't re-invent the wheels!
+2. A good text editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
+3. Install misc Node.js open source libraries. Don't re-invent the wheels!
 
   | NODE libs  | description |
   | :------------ |:------------|
