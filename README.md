@@ -212,7 +212,7 @@ var otable = $('#ttResult').html('<table class="display"></table>').children('ta
 });
 ```
 
-***Ok, back to the question, how do we implement a typeahead for the text input field?*
+**Ok, back to the question, how do we implement a typeahead for the text input field?**
 Before page is loaded, we already made a trip to the database server and cached a few data arrays in JavaScript.
 ```JavaScript
 script(src='/front_JS/searchFrontEnd.js')   //front end logic in JavaScript
