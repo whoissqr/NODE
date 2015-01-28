@@ -93,7 +93,7 @@ script(type='text/javascript').
   var deviceArray =!{JSON.stringify(deviceArray)};           
 ```
 	
-**Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to examine the front end logic.
+**Then, let's open [/front_JS/searchFrontEnd.js](https://github.com/whoissqr/NODE/blob/master/public/front_JS/searchFrontEnd.js)** to examine the front end logic for form submission. [Let's leave TypeAhead implementation to the later since it is relatively a standalone topic.]
 ```JavaScript
 $(function() {
     // --- front end AJAX handler for universal query [lotid]
@@ -212,3 +212,80 @@ var otable = $('#ttResult').html('<table class="display"></table>').children('ta
 });
 ```
 
+***Ok, back to the question, how do we implement a typeahead for the text input field?*
+Before page is loaded, we already made a trip to the database server and cached a few data arrays in JavaScript.
+```JavaScript
+script(src='/front_JS/searchFrontEnd.js')   //front end logic in JavaScript
+
+script(type='text/javascript').
+  var recentLotArray =!{JSON.stringify(recentLotArray)};     
+  var testerArray =!{JSON.stringify(testerArray)};           
+  var handlerArray =!{JSON.stringify(handlerArray)};         
+  var deviceArray =!{JSON.stringify(deviceArray)};           
+```
+
+They are basically the data sources which we are going to map user input against.
+```JavaScript
+$(document).ready(function() {  
+    //--- front end twitter typeahead handler for search engine ---
+    var houndFactory = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      local: $.map(factoryArray, function(state) { return { value: state }; })
+    });
+
+    var houndLotID = new Bloodhound({
+    ...
+    });
+
+    var houndTesterID = new Bloodhound({
+    ...
+    });
+
+    var houndHandlerID = new Bloodhound({
+    ...
+    });
+
+    var houndDeviceID = new Bloodhound({
+    ...
+    });
+     
+    houndLotID.initialize();
+    houndTesterID.initialize();
+    houndHandlerID.initialize();
+    houndDeviceID.initialize();
+    houndFactory.initialize();
+     
+    $('#custom-templates .typeahead').typeahead({
+      hint: false,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      displayKey: 'value',      
+      source: houndTesterID.ttAdapter(),
+      templates: {
+            empty: ['<div class="empty-message">', '', '</div>'].join('\n'),
+            suggestion: Handlebars.compile('<p>Tester: <strong>{{value}}</strong></p>')
+      }
+    },
+    {
+      displayKey: 'value',      
+      source: houndHandlerID.ttAdapter(),
+      templates: {
+            empty: ['<div class="empty-message">', '', '</div>'].join('\n'),
+            suggestion: Handlebars.compile('<p>Handler: <strong>{{value}}</strong></p>')
+      }
+    },
+    {
+      ...
+    },    
+    {
+      ...
+    },
+    {
+      ...
+    }
+    );
+});
+```
