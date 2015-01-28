@@ -15,7 +15,7 @@ When user keys in few characters, the Twitter typeahead library will prompt user
 
 ![typeahead](https://github.com/whoissqr/NODE/blob/master/pic/Typeahead_lot.jpg)
 
-The page will return the data using AJAX and present the row data in table forms (jquery.dataTables.min.js)
+When 'Submit' button is clicked, form data is sumbitted to backend Node.js and returned using AJAX and row data is presented in tabular forms (jquery.dataTables.min.js)
 
 ![Data shown in table](https://github.com/whoissqr/NODE/blob/master/pic/table.jpg)
 
@@ -30,10 +30,10 @@ The page will return the data using AJAX and present the row data in table forms
   | [express](http://expressjs.com/)       | Fast, unopinionated, minimalist web framework for Node.js                                                               |
   | [pg-query](https://github.com/brianc/node-pg-query)      | database interface to PostgresSQL                                                                     |
   | [async](https://github.com/caolan/async)         | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.  |
-  | [d3](http://d3js.org/)           | a JavaScript library for manipulating documents based on data.                                                                 |  
+  | [d3](http://d3js.org/)           | A JavaScript library for manipulating documents based on data.                                                                 |  
   | [lodash](https://lodash.com/)        | A utility library delivering consistency, customization, performance, & extras.                                            | 
-  | [jquery](http://jquery.com/)        | a fast, small, and feature-rich JavaScript library.                                                                         | 
-  | [node-windows](https://github.com/coreybutler/node-windows )  | a library which helps to wrap Node.js server in windows service form. | 
+  | [jquery](http://jquery.com/)        | A fast, small, and feature-rich JavaScript library.                                                                         | 
+  | [node-windows](https://github.com/coreybutler/node-windows)  | A library which helps to wrap Node.js server in windows service form. | 
   | [typeahea.js](http://twitter.github.io/typeahead.js/) | a flexible JavaScript library that provides a strong foundation for building robust typeaheads. |
   | [DataTables](http://www.datatables.net/) | DataTables is a plug-in for the jQuery Javascript library, which adds interaction control to any HTML table. |
 
@@ -42,12 +42,12 @@ The page will return the data using AJAX and present the row data in table forms
 
 ##How does it work together?
 
-Some basic understanding about Express folder structure is helpful. To me, most frequently accessed files and folders are 
+Some basic understanding about Express folder structure is helpful. Over here, the most frequently accessed files and folders are 
 
-- app.json-- This is like an entry point.
-- routes  -- Well, those are where the page URL being routed to.
+- app.json-- This is like an entry point to the code.
+- routes  -- Well, this is where the page URL being routed to.
 - public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
-				public/javascripts which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they should be in CDNs instead, but the sake of intranet, err...)  	   
+				public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)  	   
 - views -- All those Jade files.
 - config.json -- This is where I store my database login credentials.
 - packge.json -- This is where Express configures the back end JavaScript modules.
