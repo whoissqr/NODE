@@ -11,7 +11,6 @@ The project source code can be found here: [NODE](https://github.com/whoissqr/NO
 The page http://localhost:3000/search will show a text input box and a 'Submit' button upon page load.
 
 ![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
-<img style="border:3px solid black;" src="https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg" alt="blank_search_bordered" />
 
 When user keys in few characters, the Twitter typeahead library will prompt user with multiple hints from a few different data sources based on string partial matching,
 
