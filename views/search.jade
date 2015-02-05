@@ -1,15 +1,15 @@
 doctype html
+
 html
 	head
-		title === universal testing query ===
-
+		meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+		title MPRS online web portal (universal search)
 		link(href='/stylesheets/style.css', rel='stylesheet')
 		link(href='/stylesheets/jquery.dataTables.css', rel='stylesheet')
 		link(href='//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css', rel='stylesheet')
 
-		script(src='/javascripts/jquery.min.js')
-		script(src='/javascripts/jquery-ui-1.10.4.js')
-		script(src='/javascripts/jquery.js')
+		script(src='https://code.jquery.com/jquery-2.1.3.js')
+		script(src='https://code.jquery.com/ui/1.11.2/jquery-ui.js')
 		script(src='/javascripts/jquery.dataTables.min.js')
 
 
@@ -22,33 +22,60 @@ html
 			var testerArray =!{JSON.stringify(testerArray)};
 			var handlerArray =!{JSON.stringify(handlerArray)};
 			var deviceArray =!{JSON.stringify(deviceArray)};
-		
+
 	body
-
-		form#queryForm(method='get')
-			#custom-templates
-				input.typeahead#keystr(type='text', placeholder='lot id, tester id, handler id, device, kyec, spil, xap, atk', size = 60, name='keystr')
+		header#header
+			#logo
+				h2 Maintenance Performance Reporting System
+		main
+			.innertube
+			form#queryForm(method='get')
+				#custom-templates
+					input.typeahead#keystr(type='text', placeholder='lot id, tester id, handler id, device, kyec, spil, xap, atk', size = 60, name='keystr')
 				
-			input#btn_search_query(type='submit')
+				input#btn_search_query(type='submit')
 
-		br 
-		br  
-		br
-		br
-		br
-		br
+			br 
+			br
+			br
 
-		button#factory.displayButton Factory
-		button#tester.displayButton Tester
-		button#handler.displayButton Handler
-		button#lotid.displayButton lotid
-		button#grade.displayButton grade
-		button#dev.displayButton device
-		button#pkg.displayButton package
+			button#factory.displayButton(disabled='') Factory
+			button#tester.displayButton(disabled='') Tester
+			button#handler.displayButton(disabled='') Handler
+			button#lotid.displayButton(disabled='') lotid
+			button#grade.displayButton(disabled='') grade
+			button#dev.displayButton(disabled='') device
+			button#pkg.displayButton(disabled='') package
 
-		br
-		br
-		hr
-		#ttResult
+			br
+			br
+			hr
+			#ttResult
+		
+		nav#nav
+			.innertube
+			br
+			br
+			br
+			p
+				input#lastW(name='timeBtnGrp', type='radio', value='lastW')
+				| last week
+				br
+				br
+				input#lastM(name='timeBtnGrp', type='radio', value='lastM')
+				| last month
+				br
+				br
+				input(name='timeBtnGrp', type='radio', value='period')
+				| From
+				br
+				br
+				input#startDT.rBtnTime.datepicker(type='text')
+				br
+				h5#btnLabel To
+				br
+				br
+				input#endDT.rBtnTime.datepicker(type='text')
+				br
 
 

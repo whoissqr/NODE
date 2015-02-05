@@ -5,6 +5,10 @@ factoryArray.push('SPIL');
 factoryArray.push('ATK');
 
 $(document).ready(function() {	
+		$(".datepicker").datepicker();
+		$('#startDT').prop("disabled", true);
+		$('#endDT').prop("disabled", true);
+
 		//--- front end twitter typeahead handler for search engine ---
 		var houndFactory = new Bloodhound({
 			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -139,25 +143,115 @@ function getTesterFromFactory(factory){
 		return factoryTestersArray;
 }
 
+var today = new Date();
+var startDate = new Date(today -  1000 * 60 * 60 * 24 * 7); //Date is in millisecs;
+var endDate = today;
+
+/* 
+	 lastW will be 7 days from Now; 
+	 lastM will be 30 days from Now;
+	 period selction is 7AM on startDate to 7AM on endDate.
+*/
+function getSearchPeriod(){
+	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return; }
+
+	var selectedValue = $('input[name=timeBtnGrp]:checked').val();
+	
+	if(selectedValue=='lastW') 
+	{
+		startDate = new Date(today -  1000 * 60 * 60 * 24 * 7);
+		endDate = today;
+		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
+		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
+	}
+	else if(selectedValue=='lastM') 
+	{
+		startDate = new Date(today -  1000 * 60 * 60 * 24 * 30);
+		endDate = today;
+		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
+		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
+	}
+	else
+	{
+		startDate = $('#startDT').datepicker( "getDate" );
+		endDate = $('#endDT').datepicker( "getDate" );
+
+		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
+		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
+	}
+
+	startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
+	endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
+	console.log(startDate + ' --- ' + endDate);
+}
+
 $(function() {
+		//--- action handler for date time selection button group ---
+		$('input[name=timeBtnGrp]').click(function(e){			
+			var selectedValue = $('input[name=timeBtnGrp]:checked').val();
+			
+			if( (selectedValue=='lastW') || (selectedValue=='lastM') ) 
+			{
+				console.log(selectedValue +' selected');
+				$('#startDT').prop("disabled", true);
+				$('#endDT').prop("disabled", true);
+			}else if( selectedValue=='period')
+			{
+				$('#startDT').prop("disabled", false);
+				$('#endDT').prop("disabled", false);
+			}else 
+			{
+			}			
+		});
+
 		// --- front end AJAX handler for universal query [lotid]
 		$("#btn_search_query").click(function(e){
 			e.preventDefault();
 			console.log('btn_search_query clicked');
 			var params = {};
-			var userInput = $("#keystr").val().toUpperCase();
+			var userInput = $("#keystr").val().toUpperCase().trim();
 			params['value'] = userInput;			
-			if($.inArray(userInput, recentLotArray)!=-1) params['type'] = 'lotid';
-			else if($.inArray(userInput, testerArray)!=-1) params['type'] = 'testerid';
-			else if($.inArray(userInput, handlerArray)!=-1) params['type'] = 'handlerid';
-			else if($.inArray(userInput, deviceArray)!=-1) params['type'] = 'deviceid';
+			if($.inArray(userInput, recentLotArray)!=-1) 
+			{
+				params['type'] = 'lotid';
+				$('input[name=timeBtnGrp]').prop('checked', false);
+			}
+			else if($.inArray(userInput, testerArray)!=-1) 
+			{
+				params['type'] = 'testerid';
+				if(!$('input[name=timeBtnGrp]').is(':checked'))
+				{
+					$('#lastW').prop("checked", true);
+				}
+			}
+			else if($.inArray(userInput, handlerArray)!=-1) 
+			{
+				params['type'] = 'handlerid';
+				if(!$('input[name=timeBtnGrp]').is(':checked'))
+				{
+					$('#lastM').prop("checked", true);
+				}
+				
+			}
+			else if($.inArray(userInput, deviceArray)!=-1) 
+			{
+				params['type'] = 'deviceid';
+				$('input[name=timeBtnGrp]').prop('checked', false);
+			}
 			else if($.inArray(userInput, factoryArray)!=-1) 
 			{ 
 				params['type'] = 'factory'; 
 				params['testers'] = getTesterFromFactory(params['value']);
+				$('input[name=timeBtnGrp]').prop('checked', false);
 			}
-			else if($.isNumeric(userInput)) params['type'] = 'lotid';
+			else if($.isNumeric(userInput))
+			{
+			 params['type'] = 'lotid';
+			 $('input[name=timeBtnGrp]').prop('checked', false);
+			}
 
+			getSearchPeriod();
+			
 			$.ajax({
 				url: 'universalQuery',	 //routed to index.js
 				type: 'GET',
@@ -169,17 +263,16 @@ $(function() {
 						if(params['type'] == 'lotid')
 						{
 								var columns = [
-									{"sTitle": "lotstartdt",	"mData": "lotstartdt"}, 
-									{"sTitle": "ftc",					"mData": "ftc"}, 
-									{"sTitle": "tester",			"mData": "testerid"}, 
-									{"sTitle": "handler",			"mData": "handlerid"}, 
-									{"sTitle": "qty",					"mData": "xamsqty"}, 
-									{"sTitle": "testprogname","mData": "testprogname"}, 
-									{"sTitle": "testgroup",	  "mData": "testgroup"}, 
-									{"sTitle": "speed",				"mData": "speedgrade"}, 
-									{"sTitle": "temperature",	"mData": "temperature"}, 
-									{"sTitle": "masknum",			"mData": "masknum"}, 
-									{"sTitle": "loadboard",		"mData": "loadboardid"}
+									{"sTitle": "Lotstartdt",	"mData": "lotstartdt"}, 
+									{"sTitle": "FTC",					"mData": "ftc"}, 
+									{"sTitle": "Tester",			"mData": "testerid"}, 
+									{"sTitle": "Handler",			"mData": "handlerid"}, 
+									{"sTitle": "LotSize",			"mData": "xamsqty"}, 
+									{"sTitle": "Testprogname","mData": "testprogname"}, 
+									{"sTitle": "Testgroup",	  "mData": "testgroup"}, 
+									{"sTitle": "Speed",				"mData": "speedgrade"}, 
+									{"sTitle": "Temperature",	"mData": "temperature"},  
+									{"sTitle": "Loadboard",		"mData": "loadboardid"}
 								];
 								//refer to table property: http://legacy.datatables.net/ref
 								var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
@@ -208,10 +301,10 @@ $(function() {
 								var columns = [
 									{"sTitle": "Date",			"mData": "lotstartdt"}, 
 									{"sTitle": "LotID",			"mData": "lotid"}, 
-									{"sTitle": "device",		"mData": "deviceid"}, 
-									{"sTitle": "package",		"mData": "packageid"}, 
-									{"sTitle": "handler",		"mData": "handlerid"}, 
-									{"sTitle": "masknum",		"mData": "masknum"}, 
+									{"sTitle": "Device",		"mData": "deviceid"}, 
+									{"sTitle": "Package",		"mData": "packageid"},
+									{"sTitle": "Tester",		"mData": "testerid"},  
+									{"sTitle": "Handler",		"mData": "handlerid"}, 
 									{"sTitle": "loadboard",	"mData": "loadboardid"}
 								];
 								//[ref] refer to table property: http://legacy.datatables.net/ref
@@ -237,12 +330,13 @@ $(function() {
 						{
 								var columns = [
 									{"sTitle": "Date",			"mData": "lotstartdt"}, 
-									{"sTitle": "LotID",			"mData": "lotid"}, 
-									{"sTitle": "Tester",			"mData": "testerid"}, 
-									{"sTitle": "device",		"mData": "deviceid"}, 
-									{"sTitle": "package",		"mData": "packageid"}, 
-									{"sTitle": "masknum",		"mData": "masknum"}, 
-									{"sTitle": "loadboard",	"mData": "loadboardid"}
+									{"sTitle": "LotID",			"mData": "lotid"},
+									{"sTitle": "LotSize",		"mData": "qty"}, 
+									{"sTitle": "Tester",		"mData": "testerid"}, 
+									{"sTitle": "Handler",		"mData": "handlerid"},
+									{"sTitle": "Device",		"mData": "deviceid"}, 
+									{"sTitle": "Package",		"mData": "packageid"}, 
+									{"sTitle": "Loadboard",	"mData": "loadboardid"}
 								];
 								//[ref] refer to table property: http://legacy.datatables.net/ref
 								var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
@@ -294,8 +388,7 @@ $(function() {
 									{"sTitle": "Testerid",		"mData": "testername"},
 									{"sTitle": "Handlerid",		"mData": "handlerid"}, 
 									{"sTitle": "packageid",		"mData": "packageid"},  
-									{"sTitle": "Loadboardid",	"mData": "loadboardid"}, 
-									{"sTitle": "Maskset",			"mData": "masknum"}, 
+									{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
 									{"sTitle": "Status",			"mData": "category"},
 								];
 								//[ref] refer to table property: http://legacy.datatables.net/ref
@@ -323,5 +416,6 @@ $(function() {
 				}
 			});
 		});		
+
 });
 

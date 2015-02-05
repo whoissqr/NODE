@@ -192,10 +192,10 @@ router.get('/universalQuery', function(req, res) {
 						var today = new Date();
 						var OneMonthAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in millisecs;
 						var dateStr = OneMonthAgo.toISOString().slice(0, 19).replace('T', ' ');
-						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
+						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
 			 			sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\'';
 			 			sqlstr += ' and lotstartdt>\'' + dateStr + '\'';
-			 			sqlstr += ' group by lotid, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt)';
+			 			sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt)';
 			 			getDataFromHandlerID(sqlstr, function(d) {
 			 				res.json(d);
 			 			});
@@ -348,6 +348,8 @@ function getDataFromHandlerID(sqlstr, cb) {
 					rowArray['lotid'] = rows[i].lotid;
 					rowArray['deviceid'] = rows[i].deviceid;
 					rowArray['packageid'] = rows[i].packageid;
+					rowArray['handlerid'] = rows[i].handlerid;
+					rowArray['qty'] = rows[i].xamsqty;
 
 					var rawTesterID = rows[i].testerid.toUpperCase();
 					if(rawTesterID.indexOf('KYEC')!=-1){

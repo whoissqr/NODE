@@ -1,6 +1,64 @@
 body {
-  padding: 50px;
+	margin: 0;
+	overflow: hidden;
+	height: 100%;
+	max-height: 100%;
+	line-height: 1.5em;
+	padding: 50px;
   font: 16px "sans-serif", Helvetica, Arial, sans-serif;
+}
+/*
+|  header    |
+| nav | main |
+| nav | main |
+*/
+#header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 70px;
+	overflow: hidden; /* Disables scrollbars on the header frame. To enable scrollbars, change "hidden" to "scroll" */
+	background: #B0B0B0;
+}
+
+#nav {
+	position: absolute;
+	top: 70px;
+	left: 0;
+	bottom: 0;
+	width: 230px;
+	background: #eee;
+}
+
+main {
+	position: fixed;
+	top: 70px; /* Set this to the height of the header */
+	left: 230px;
+	right: 0;
+	bottom: 0;
+	overflow: auto;
+	background: #fff;
+	margin-left: 20px; 
+	overflow: scroll;
+}
+
+.innertube {
+	margin: 15px; /* Provides padding for the content */
+}
+
+#logo {
+	padding:10px;
+}
+
+.rBtnTime, #btnLabel{
+	position: fixed;
+	left: 20px;
+}
+
+.rBtnTime{
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 
 a {
@@ -42,11 +100,6 @@ td, th { text-align: left }
 #custom-templates {
 	float: left;
 	padding-right: 20px;
-}
-
-#custom-templates .typeahead{
-	float: left;
-	padding-right: 20px;
 	height: 30px;
 }
 
@@ -54,10 +107,10 @@ td, th { text-align: left }
 	float: left;
 	padding-left: 20px;
 	padding-right: 20px;
-	height: 33px;
+	height: 30px;
 }
 
-/* typeahead related CSS start */
+/* ---- typeahead related CSS start ---- */
 .tt-query, /* UPDATE: newer versions use tt-input instead of tt-query */
 
 .tt-input {
@@ -110,4 +163,4 @@ td, th { text-align: left }
 .tt-cursor{
 	color:#0033FF;
 }
-/* typeahead related CSS end */
+/* ---- typeahead related CSS end ---- */
