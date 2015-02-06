@@ -176,26 +176,22 @@ router.get('/universalQuery', function(req, res) {
 			 			break;
 
 			 case 'testerid': 
-						var today = new Date();
-						var SevenDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 7); //Date is in millisecs;
-						var dateStr = SevenDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
 			 			var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
 			 			sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
-			 			sqlstr += ' and lotstartdt>\'' + dateStr + '\'';
-			 			sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt)';
+			 			sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
+			 			sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+			 			sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) DESC';
 			 			getDataFromTesterID(sqlstr, function(d) {
 			 				res.json(d);
 			 			});
 			 			break;
 
 			case 'handlerid':
-						var today = new Date();
-						var OneMonthAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in millisecs;
-						var dateStr = OneMonthAgo.toISOString().slice(0, 19).replace('T', ' ');
 						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
-			 			sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\'';
-			 			sqlstr += ' and lotstartdt>\'' + dateStr + '\'';
-			 			sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt)';
+			 			sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\''; 			
+			 			sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
+			 			sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+			 			sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt) DESC';
 			 			getDataFromHandlerID(sqlstr, function(d) {
 			 				res.json(d);
 			 			});

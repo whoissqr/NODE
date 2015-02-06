@@ -153,7 +153,7 @@ var endDate = today;
 	 period selction is 7AM on startDate to 7AM on endDate.
 */
 function getSearchPeriod(){
-	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return; }
+	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
 
 	var selectedValue = $('input[name=timeBtnGrp]:checked').val();
 	
@@ -176,13 +176,56 @@ function getSearchPeriod(){
 		startDate = $('#startDT').datepicker( "getDate" );
 		endDate = $('#endDT').datepicker( "getDate" );
 
+		if(startDate==null){
+			$('#msgArea').val('Please select start date.');
+			return false;
+		}
+		
+		if(endDate==null){
+			$('#msgArea').val('Please select end date.');
+			return false;
+		}
+
 		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
 		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
+	
+		if(!validateDatePicked()) return false;
 	}
 
 	startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
 	endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
 	console.log(startDate + ' --- ' + endDate);
+
+	return true;
+}
+
+function resetTimeBtnGroup(){
+	$('input[name=timeBtnGrp]').prop('checked', false);
+	$('#startDT').datepicker( "setDate", null);
+	$('#endDT').datepicker( "setDate", null);
+}
+
+function validateDatePicked(){
+	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
+
+	if(startDate > today) {
+		$('#msgArea').val('[' + startDate.toDateString() + '] is a future date.');
+		return false;
+	}
+
+	if(startDate >= endDate){
+		$('#msgArea').val('Error: Start date [' + startDate.toDateString() + '] is earlier than End date [' + endDate.toDateString() + '].');
+		return false;
+	}
+
+	var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	if(diffDays>60){
+		$('#msgArea').val('Error: Date range must be less than 60 days.');
+		return false;
+	}
+
+	return true;
 }
 
 $(function() {
@@ -195,7 +238,7 @@ $(function() {
 				console.log(selectedValue +' selected');
 				$('#startDT').prop("disabled", true);
 				$('#endDT').prop("disabled", true);
-			}else if( selectedValue=='period')
+			}else if(selectedValue=='period')
 			{
 				$('#startDT').prop("disabled", false);
 				$('#endDT').prop("disabled", false);
@@ -207,14 +250,18 @@ $(function() {
 		// --- front end AJAX handler for universal query [lotid]
 		$("#btn_search_query").click(function(e){
 			e.preventDefault();
+
 			console.log('btn_search_query clicked');
+			$('#msgArea').val('');
+			
 			var params = {};
 			var userInput = $("#keystr").val().toUpperCase().trim();
 			params['value'] = userInput;			
 			if($.inArray(userInput, recentLotArray)!=-1) 
 			{
 				params['type'] = 'lotid';
-				$('input[name=timeBtnGrp]').prop('checked', false);
+				resetTimeBtnGroup();
+				$('#msgArea').val('searching for LotID [' + userInput + ']');
 			}
 			else if($.inArray(userInput, testerArray)!=-1) 
 			{
@@ -223,6 +270,7 @@ $(function() {
 				{
 					$('#lastW').prop("checked", true);
 				}
+				$('#msgArea').val('searching for testerid [' + userInput + '] ...');
 			}
 			else if($.inArray(userInput, handlerArray)!=-1) 
 			{
@@ -230,27 +278,41 @@ $(function() {
 				if(!$('input[name=timeBtnGrp]').is(':checked'))
 				{
 					$('#lastM').prop("checked", true);
-				}
-				
+				}		
+				$('#msgArea').val('searching for handlerid [' + userInput + '] ...');
 			}
 			else if($.inArray(userInput, deviceArray)!=-1) 
 			{
 				params['type'] = 'deviceid';
-				$('input[name=timeBtnGrp]').prop('checked', false);
+				resetTimeBtnGroup();
+				$('#msgArea').val('searching for deviceid [' + userInput + '] ...');
 			}
 			else if($.inArray(userInput, factoryArray)!=-1) 
 			{ 
 				params['type'] = 'factory'; 
 				params['testers'] = getTesterFromFactory(params['value']);
-				$('input[name=timeBtnGrp]').prop('checked', false);
+				resetTimeBtnGroup();
+				$('#msgArea').val('searching for factory [' + userInput + '] ...');
 			}
 			else if($.isNumeric(userInput))
 			{
-			 params['type'] = 'lotid';
-			 $('input[name=timeBtnGrp]').prop('checked', false);
+				params['type'] = 'lotid';
+				resetTimeBtnGroup();
+				$('#msgArea').val('searching for LotID [' + userInput + '] ...');
 			}
 
-			getSearchPeriod();
+			if(!getSearchPeriod()) {
+				console.log('date range not possible.');
+				$('#ttResult').hide();
+				return;
+			}
+			if($('input[name=timeBtnGrp]').is(':checked'))	{
+				$('#msgArea').val( $('#msgArea').val() + '\nFrom ' + startDate + '\nTo ' + endDate + '.\n');
+			}
+
+			params['startDate'] = startDate;
+			params['endDate'] = endDate;
+
 			
 			$.ajax({
 				url: 'universalQuery',	 //routed to index.js

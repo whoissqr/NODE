@@ -56,6 +56,11 @@ main {
 	left: 20px;
 }
 
+#msgArea{
+	position: fixed;
+	left: 4px;
+}
+
 .rBtnTime{
 	margin-top: 15px;
 	margin-bottom: 15px;
