@@ -8,6 +8,11 @@ var queryString = require('querystring');
 var jQuery = require('jquery');
 var $ = jQuery.create();
 var router = express.Router();
+var EventLogger = require('node-windows').EventLogger;
+var log = new EventLogger({
+	source: 'MPRS.Web',
+	eventLog: 'Application'
+});
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -32,7 +37,7 @@ router.get('/queryTT', function(req, res) {
 			}
 	});				
 
-  //select among those row whose test time falls within the 4 sigma envelope
+	//select among those row whose test time falls within the 4 sigma envelope
 	var sqlstr = 'select device, testprog, package as pkg, testgrade, testgroup, scd, temp, sum(qtyin) AS qtyin, sum(qtyout) qtyout, round((sum(qtyout*testtime)/sum(qtyout))::numeric,2)  as tt from testtime ';
 
 	var whereCond = 'where device=\'' + device + '\' ';
@@ -129,7 +134,7 @@ router.get('/queryFTC', function(req, res) {
 				var ftc2="";
 
 				$.each(ftcArray, function(i, el){
-					  if(el.indexOf("R")!=-1) return;   //remove retest ftc code
+						if(el.indexOf("R")!=-1) return;   //remove retest ftc code
 						var temp = el.replace(/[0-9]*$/, "");  
 						var regex = new RegExp(temp+"$");
 						if(!ftc2.substring(0,ftc2.length-1).match(regex))
@@ -159,64 +164,79 @@ router.get('/universalQuery', function(req, res) {
 	var theUrl = url.parse( req.url );
 	var queryObj = queryString.parse( theUrl.query );
 	var params = JSON.parse( queryObj.jsonParams );
-
-	query.connectionParameters = config.mprsConnStr;     
-	console.log(params['type']);
+			 
+	console.log("params['type'] = " + params['type']);
 	//console.log(params['testers']);
 	//console.log(params['value']);
 	
 	
 	switch(params['type']){
 			 case 'lotid':	
-			 			var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
-			 			sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
-			 			getDataFromLotID(sqlstr, function(d) {
-			 				res.json(d);
-			 			});
-			 			break;
+						var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
+						sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
+						getDataFromLotID(sqlstr, function(d) {
+							res.json(d);
+						});
+						break;
 
 			 case 'testerid': 
-			 			var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
-			 			sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
-			 			sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
-			 			sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
-			 			sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) DESC';
-			 			getDataFromTesterID(sqlstr, function(d) {
-			 				res.json(d);
-			 			});
-			 			break;
+						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
+						sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
+						sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
+						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+						sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) DESC';
+						getDataFromTesterID(sqlstr, function(d) {
+							res.json(d);
+						});
+						break;
 
 			case 'handlerid':
 						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
-			 			sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\''; 			
-			 			sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
-			 			sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
-			 			sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt) DESC';
-			 			getDataFromHandlerID(sqlstr, function(d) {
-			 				res.json(d);
-			 			});
-			 			break;
+						sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\''; 			
+						sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
+						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+						sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt) DESC';
+						getDataFromHandlerID(sqlstr, function(d) {
+							res.json(d);
+						});
+						break;
 
 			 case 'deviceid':
-			 			var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
-			 			sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
-			 			sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
-			 			getDataFromDeviceID(sqlstr, function(d) {
-			 				res.json(d);
-			 			});
-			 			break;
+						var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
+						sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
+						sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
+						getDataFromDeviceID(sqlstr, function(d) {
+							res.json(d);
+						});
+						break;
 
 			 case 'factory':
-			 			getDataFromFactory(params['testers'], function(d) {
-			 				res.json(d);
-			 			});
-			 			break;
+						getDataFromFactory(params['testers'], function(d) {
+							res.json(d);
+						});
+						break;
+			 case 'OEE':
+						var sqlstr = 'SELECT ww, platform, ';
+						sqlstr += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\']) AS \"category\",';
+						sqlstr += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown]) AS \"hours\"';
+						sqlstr += ' from oee where osat=\'' + params['factory'] + '\' and years=\'2015\'';
+						getOEEData(sqlstr, function(d) {
+							//res.json(d);
+							res.writeHead(200, {'content-type':'application/json', 'content-length':Buffer.byteLength(d)}); 
+							res.end(d);
+						});
+						break;
+			 case 'error':
+						log.warn('Unrecognized user input: ' + params['value']);
+						res.json(null);
+						break;
 	}
 	
 });
 
 function getDataFromLotID(sqlstr, cb) {
 		console.log(sqlstr);
+		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
@@ -229,7 +249,7 @@ function getDataFromLotID(sqlstr, cb) {
 				
 				for (var i = 0; i < rows.length; i++) {
 
-				  if(rows[i].ftc.toUpperCase().indexOf('COR')!=-1)  continue;
+					if(rows[i].ftc.toUpperCase().indexOf('COR')!=-1)  continue;
 					var rowArray = {};
 					var monStart = rows[i].lotstartdt.getMonth() +1; //since getMonth() is in [0-11] range
 					rowArray['lotstartdt'] = rows[i].lotstartdt.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstartdt.getDate();
@@ -278,6 +298,7 @@ function getDataFromLotID(sqlstr, cb) {
 
 function getDataFromTesterID(sqlstr, cb) {
 		console.log(sqlstr);
+		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
@@ -326,6 +347,7 @@ function getDataFromTesterID(sqlstr, cb) {
 
 function getDataFromHandlerID(sqlstr, cb) {
 		console.log(sqlstr);
+		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
@@ -367,6 +389,7 @@ function getDataFromHandlerID(sqlstr, cb) {
 
 function getDataFromDeviceID(sqlstr, cb) {
 		console.log(sqlstr);
+		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
@@ -414,9 +437,24 @@ function getDataFromFactory(testers, cb) {
 		});
 }
 
+function getOEEData(sqlstr, cb){
+		console.log(sqlstr);
+		query.connectionParameters = config.reportConnStr;
+		query(sqlstr, function(err, rows, result) {
+				assert.equal(rows, result.rows);
+				console.log(rows.length + " rows returned.");
+				if(rows.length==0) {
+						cb(null);
+				}
+				var json = JSON.stringify(result.rows);
+				cb(json);
+		});
+}
+
 var lastE10stateArray = new Array();
 
 var getLastE10Status = function(testerid, cb) { // called once for each project row	    
+				query.connectionParameters = config.mprsConnStr;
 				query('SELECT * FROM e10state WHERE testerid=\''+testerid+'\' ORDER BY startdt DESC LIMIT 1', 
 					function(err, rows, result) {
 							if(err) return cb(err); // let Async know there was an error. Further processing will stop

@@ -16,6 +16,9 @@ html
 		script(src='/javascripts/typeahead.bundle.js')
 		script(src='/javascripts/handlebars-v2.0.0.js')
 		script(src='/front_JS/searchFrontEnd.js')
+
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js')
+		script(src='https://rawgit.com/PMSI-AlignAlytics/dimple/master/dist/dimple.latest.js')
 	
 		script(type='text/javascript').
 			var recentLotArray =!{JSON.stringify(recentLotArray)};
@@ -51,6 +54,10 @@ html
 			br
 			hr
 			#ttResult
+			#OEE_total
+			#OEE_93k
+			#OEE_t2k
+			
 		
 		nav#nav
 			.innertube

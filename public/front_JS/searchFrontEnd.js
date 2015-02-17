@@ -1,4 +1,5 @@
 var factoryArray = new Array();
+
 factoryArray.push('XAP');
 factoryArray.push('KYEC');
 factoryArray.push('SPIL');
@@ -300,6 +301,26 @@ $(function() {
 				resetTimeBtnGroup();
 				$('#msgArea').val('searching for LotID [' + userInput + '] ...');
 			}
+			else if(userInput.indexOf("OEE")>=0)
+			{
+				params['type'] = 'OEE';
+				var instr = userInput.trim();
+
+				var insplit = instr.split(' ');
+				if(insplit[0]=='OEE') params['factory'] = insplit[1].toUpperCase();
+				else if(insplit[1] =='OEE') params['factory'] = insplit[0].toUpperCase();
+				else {}
+
+				console.log('type = ' + params['type']);
+				console.log('factory = ' + params['factory']);
+				resetTimeBtnGroup();
+			}
+			else
+			{
+				//user input is not recognized.
+				params['type'] = 'error';
+				$('#msgArea').val('Input [' + userInput + '] is a not valid keyword.');
+			}
 
 			if(!getSearchPeriod()) {
 				console.log('date range not possible.');
@@ -320,7 +341,11 @@ $(function() {
 				data: {jsonParams:JSON.stringify(params)},
 				contentType: 'application/json',									
 				success: function(reply) {
-						console.log('AJAX reply success:');		
+						if(!reply) console.log('reply is null.');
+						console.log('AJAX reply success:');
+						$('#OEE_t2k').hide();
+						$('#OEE_93k').hide();
+						$('#ttResult').show();	
 						//for lotid based query result display to datatable
 						if(params['type'] == 'lotid')
 						{
@@ -471,7 +496,51 @@ $(function() {
 								$('#pkg').hide();
 						}
 
-						$('#ttResult').show();
+						if(params['type'] == 'OEE')
+						{
+								$('#ttResult').hide();
+								$('#OEE_93k').empty();
+								$('#OEE_t2k').empty();
+
+								var d93k = jQuery.grep(reply, function( n, i ) {
+									return		((n.platform.toUpperCase()=="93K") 
+													&& (n.category.toUpperCase()!=="MTE") 
+													&& (n.category.toUpperCase()!=="PTE")
+													&& (n.category.toUpperCase()!=="IDLE")
+													&& (n.category.toUpperCase()!=="MFGHOUR")
+												);
+								});
+								data = d93k;//enable chrome debug
+
+								var svg93k = dimple.newSvg("#OEE_93k", 1200, 600);   //width, height of canvas
+								var myChart_93k = new dimple.chart(svg93k, d93k);
+								myChart_93k.setBounds(65, 45, 800, 500);						 //x,y, width, height
+								myChart_93k.addCategoryAxis("x", ["ww", "platform"]);
+								myChart_93k.addPctAxis("y", "hours");
+								myChart_93k.addSeries("category", dimple.plot.bar);
+								myChart_93k.addLegend(900, 150, 60, 300, "right");  //x,y, width, height
+								myChart_93k.draw();
+
+								var dt2k = jQuery.grep(reply, function( n, i ) {
+									return		((n.platform.toUpperCase()=="T2K") 
+													&& (n.category.toUpperCase()!=="MTE") 
+													&& (n.category.toUpperCase()!=="PTE")
+													&& (n.category.toUpperCase()!=="IDLE")
+													&& (n.category.toUpperCase()!=="MFGHOUR")
+												);
+								});
+								var svgt2k = dimple.newSvg("#OEE_t2k", 1200, 600);
+								var myChart_t2k = new dimple.chart(svgt2k, dt2k);
+								myChart_t2k.setBounds(65, 45, 800, 500);						  
+								myChart_t2k.addCategoryAxis("x", ["ww", "platform"]);
+								myChart_t2k.addPctAxis("y", "hours");
+								myChart_t2k.addSeries("category", dimple.plot.bar);
+								myChart_t2k.addLegend(900, 150, 60, 300, "right");
+								myChart_t2k.draw();
+								
+								$('#OEE_93k').show();
+								$('#OEE_t2k').show();
+						}						
 				},
 				error: function(response) { // if error occured
 					console.log('error: ' + JSON.stringify(response));
@@ -481,3 +550,4 @@ $(function() {
 
 });
 
+var data;
