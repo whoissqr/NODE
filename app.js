@@ -11,6 +11,7 @@ var KYEC_stat = require('./routes/KYEC_stat');
 var ftc = require('./routes/ftc');
 var volPerDevice = require('./routes/topVolPerDevice');
 var search = require('./routes/search');
+var ntlm = require('express-ntlm');
 
 var app = express();
 
@@ -25,6 +26,12 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*app.use(ntlm({
+    debug: function() {
+        var args = Array.prototype.slice.apply(arguments);
+        console.log.apply(null, args);
+    }
+}));*/
 app.use('/', routes);
 app.use('/tt', TT);
 app.use('/kyec', KYEC_stat);

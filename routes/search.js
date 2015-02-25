@@ -5,15 +5,14 @@ var queryMPRS = require('pg-query');
 var assert = require('assert');
 var async = require('async');
 var url = require('url');
-var queryString = require('querystring');
 var jQuery = require('jquery');
 var $ = jQuery.create();
 var router = express.Router();
 var _=require('lodash');
 
 var today = new Date();
-var SevenDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 7); //Date is in millisecs;
-var dateStr = SevenDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
+var ThirtyDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in millisecs;
+var dateStr = ThirtyDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
 
 /* Display the page to query test time */
 router.get('/', function(req, res) {
@@ -41,9 +40,8 @@ router.get('/', function(req, res) {
 				},
 
 				function(callback) {
-						var sqlstr = 'select distinct handlerid from lotintro where lotstartdt >\'';
-								sqlstr += dateStr;
-								sqlstr += '\' and char_length(lotid)=7';
+						var sqlstr = 'select distinct handlerid from lotintro';
+								sqlstr += ' where char_length(lotid)=7';
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
 							assert.equal(rows, result.rows);
@@ -57,6 +55,7 @@ router.get('/', function(req, res) {
 
 				function(callback) {
 						var sqlstr = 'select distinct deviceid from lotintro';
+						sqlstr += ' where char_length(lotid)=7';
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
 							assert.equal(rows, result.rows);
@@ -72,8 +71,7 @@ router.get('/', function(req, res) {
 				},
 
 				function(callback) {						
-						var sqlstr = 'select distinct testerid from lotintro where lotstartdt >\'';
-								sqlstr += dateStr + '\'';
+						var sqlstr = 'select distinct testerid from lotintro';
 	
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {

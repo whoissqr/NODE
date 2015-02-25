@@ -7,7 +7,9 @@ var url = require('url');
 var queryString = require('querystring');
 var jQuery = require('jquery');
 var $ = jQuery.create();
+require('datejs');
 var router = express.Router();
+
 var EventLogger = require('node-windows').EventLogger;
 var log = new EventLogger({
 	source: 'MPRS.Web',
@@ -252,7 +254,7 @@ function getDataFromLotID(sqlstr, cb) {
 					if(rows[i].ftc.toUpperCase().indexOf('COR')!=-1)  continue;
 					var rowArray = {};
 					var monStart = rows[i].lotstartdt.getMonth() +1; //since getMonth() is in [0-11] range
-					rowArray['lotstartdt'] = rows[i].lotstartdt.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstartdt.getDate();
+					rowArray['lotstartdt'] = rows[i].lotstartdt.toString("MMM dd HH:mm");
 					lotinfo['lotid'] = rows[i].lotid;
 					lotinfo['deviceid'] = rows[i].deviceid;
 					lotinfo['packageid'] = rows[i].packageid;
@@ -310,9 +312,8 @@ function getDataFromTesterID(sqlstr, cb) {
 				var aaData = new Array();
 				
 				for (var i = 0; i < rows.length; i++) {
-					var rowArray = {};
-					var monStart = rows[i].lotstart.getMonth() +1; //since getMonth() is in [0-11] range
-					rowArray['lotstartdt'] = rows[i].lotstart.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstart.getDate();
+					var rowArray = {};					
+					rowArray['lotstartdt'] = rows[i].lotstart.toString("MMM dd HH:mm");
 					rowArray['lotid'] = rows[i].lotid;
 					rowArray['deviceid'] = rows[i].deviceid;
 					rowArray['packageid'] = rows[i].packageid;
@@ -359,9 +360,8 @@ function getDataFromHandlerID(sqlstr, cb) {
 				var aaData = new Array();
 				
 				for (var i = 0; i < rows.length; i++) {
-					var rowArray = {};
-					var monStart = rows[i].lotstart.getMonth() +1; //since getMonth() is in [0-11] range
-					rowArray['lotstartdt'] = rows[i].lotstart.getFullYear() +'-'+ monStart +'-'+ rows[i].lotstart.getDate();
+					var rowArray = {};					
+					rowArray['lotstartdt'] = rows[i].lotstart.toString("MMM dd HH:mm");
 
 					rowArray['lotid'] = rows[i].lotid;
 					rowArray['deviceid'] = rows[i].deviceid;
@@ -402,8 +402,7 @@ function getDataFromDeviceID(sqlstr, cb) {
 				
 				for (var i = 0; i < rows.length; i++) {
 					var rowArray = {};
-					var monStart = rows[i].startdt.getMonth() +1; //since getMonth() is in [0-11] range
-					rowArray['startDt'] = rows[i].startdt.getFullYear() +'-'+ monStart +'-'+ rows[i].startdt.getDate();
+					rowArray['startDt'] = rows[i].startdt.toString("MMM dd HH:mm");
 
 					var monEnd = rows[i].enddt.getMonth() +1; //since getMonth() is in [0-11] range
 					rowArray['endDt'] = rows[i].enddt.getFullYear() +'-'+ monEnd +'-'+ rows[i].enddt.getDate();					

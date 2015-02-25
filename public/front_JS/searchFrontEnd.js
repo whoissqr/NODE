@@ -339,13 +339,14 @@ $(function() {
 				url: 'universalQuery',	 //routed to index.js
 				type: 'GET',
 				data: {jsonParams:JSON.stringify(params)},
-				contentType: 'application/json',									
+				contentType: 'application/json',
 				success: function(reply) {
 						if(!reply) console.log('reply is null.');
 						console.log('AJAX reply success:');
 						$('#OEE_t2k').hide();
 						$('#OEE_93k').hide();
-						$('#ttResult').show();	
+						$('#OEE_total').hide();
+						$('#ttResult').show();
 						//for lotid based query result display to datatable
 						if(params['type'] == 'lotid')
 						{
@@ -498,49 +499,31 @@ $(function() {
 
 						if(params['type'] == 'OEE')
 						{
+								//hide the datatable div
+								$('#ttResult').empty();
 								$('#ttResult').hide();
+
+								//re-init the chart object
 								$('#OEE_93k').empty();
 								$('#OEE_t2k').empty();
+								$('#OEE_total').empty();
 
-								var d93k = jQuery.grep(reply, function( n, i ) {
-									return		((n.platform.toUpperCase()=="93K") 
-													&& (n.category.toUpperCase()!=="MTE") 
-													&& (n.category.toUpperCase()!=="PTE")
-													&& (n.category.toUpperCase()!=="IDLE")
-													&& (n.category.toUpperCase()!=="MFGHOUR")
-												);
-								});
-								data = d93k;//enable chrome debug
+								var svgW = 1300;
+								var svgH = 600;
 
-								var svg93k = dimple.newSvg("#OEE_93k", 1200, 600);   //width, height of canvas
-								var myChart_93k = new dimple.chart(svg93k, d93k);
-								myChart_93k.setBounds(65, 45, 800, 500);						 //x,y, width, height
-								myChart_93k.addCategoryAxis("x", ["ww", "platform"]);
-								myChart_93k.addPctAxis("y", "hours");
-								myChart_93k.addSeries("category", dimple.plot.bar);
-								myChart_93k.addLegend(900, 150, 60, 300, "right");  //x,y, width, height
-								myChart_93k.draw();
+								var svg_93k = dimple.newSvg("#OEE_93k", svgW, svgH);
+								plotXOEE_by_Dimple(reply, "93K", svg_93k, "Down time distribution for A93K");
 
-								var dt2k = jQuery.grep(reply, function( n, i ) {
-									return		((n.platform.toUpperCase()=="T2K") 
-													&& (n.category.toUpperCase()!=="MTE") 
-													&& (n.category.toUpperCase()!=="PTE")
-													&& (n.category.toUpperCase()!=="IDLE")
-													&& (n.category.toUpperCase()!=="MFGHOUR")
-												);
-								});
-								var svgt2k = dimple.newSvg("#OEE_t2k", 1200, 600);
-								var myChart_t2k = new dimple.chart(svgt2k, dt2k);
-								myChart_t2k.setBounds(65, 45, 800, 500);						  
-								myChart_t2k.addCategoryAxis("x", ["ww", "platform"]);
-								myChart_t2k.addPctAxis("y", "hours");
-								myChart_t2k.addSeries("category", dimple.plot.bar);
-								myChart_t2k.addLegend(900, 150, 60, 300, "right");
-								myChart_t2k.draw();
-								
+								var svg_t2k = dimple.newSvg("#OEE_t2k", svgW, svgH);
+								plotXOEE_by_Dimple(reply, "T2K", svg_t2k, "Down time distribution for T2K");
+
+								var svg_total = dimple.newSvg("#OEE_total", svgW, svgH);
+								plotXOEE_by_Dimple(reply, "TOTAL",svg_total, "Down time distribution for Both");
+
 								$('#OEE_93k').show();
 								$('#OEE_t2k').show();
-						}						
+								$('#OEE_total').show();
+						}
 				},
 				error: function(response) { // if error occured
 					console.log('error: ' + JSON.stringify(response));
@@ -550,4 +533,36 @@ $(function() {
 
 });
 
-var data;
+function plotXOEE_by_Dimple(dataSource, platform, svg, title){
+				var data = jQuery.grep(dataSource, function( n, i ) {
+					return		((n.platform.toUpperCase()==platform) 
+									&& (n.category.toUpperCase()!=="MTE") 
+									&& (n.category.toUpperCase()!=="PTE")
+									&& (n.category.toUpperCase()!=="IDLE")
+									&& (n.category.toUpperCase()!=="MFGHOUR")
+									&& (n.category.toUpperCase()!=="EARNHOUR")
+								);
+				});
+
+				DBG = data;
+			
+				var c = new dimple.chart(svg, data);
+				c.setBounds(65, 45, 700, 500);						 //x,y, width, height
+				c.addCategoryAxis("x", ["ww", "platform"]);
+				c.addPctAxis("y", "hours");
+				c.addSeries("category", dimple.plot.bar);
+				var clegend = c.addLegend(900, 150, 50, 200, "right");	//x,y, width, height							
+				c.draw();
+				//dimple fix, see https://github.com/PMSI-AlignAlytics/dimple/issues/34
+				clegend.shapes.selectAll("text").attr("dy", "8");  
+
+				svg.append("text")
+					 .attr("x", c._xPixels() + c._widthPixels() / 2)
+					 .attr("y", c._yPixels() - 20)
+					 .style("text-anchor", "middle")
+					 .style("font-family", "sans-serif")
+					 .style("font-weight", "bold")
+					 .text(title);
+}
+
+var DBG;
