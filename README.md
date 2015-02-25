@@ -37,7 +37,7 @@ When 'Submit' button is clicked, form data is sumbitted to backend Node.js and r
   | [typeahea.js](http://twitter.github.io/typeahead.js/) | a flexible JavaScript library that provides a strong foundation for building robust typeaheads. |
   | [DataTables](http://www.datatables.net/) | DataTables is a plug-in for the jQuery Javascript library, which adds interaction control to any HTML table. |
   | [handlebars](http://handlebarsjs.com/) | Handlebars provides the power necessary to let you build semantic templates effectively with no frustration. |
-
+  | [Datejs](http://www.datejs.com/) | Datejs is an open-source JavaScript Date Library. |
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 
