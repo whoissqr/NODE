@@ -182,11 +182,11 @@ router.get('/universalQuery', function(req, res) {
 						break;
 
 			 case 'testerid': 
-						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
+						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, ftc, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
 						sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
 						sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
 						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
-						sqlstr += ' group by lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) DESC';
+						sqlstr += ' group by ftc, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) ASC';
 						getDataFromTesterID(sqlstr, function(d) {
 							res.json(d);
 						});
@@ -219,8 +219,8 @@ router.get('/universalQuery', function(req, res) {
 						break;
 			 case 'OEE':
 						var sqlstr = 'SELECT ww, platform, ';
-						sqlstr += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\']) AS \"category\",';
-						sqlstr += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown]) AS \"hours\"';
+						sqlstr += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\', \'xoee\']) AS \"category\",';
+						sqlstr += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee]) AS \"hours\"';
 						sqlstr += ' from oee where osat=\'' + params['factory'] + '\' and years=\'2015\'';
 						getOEEData(sqlstr, function(d) {
 							//res.json(d);
@@ -337,6 +337,8 @@ function getDataFromTesterID(sqlstr, cb) {
 					rowArray['handlerid'] = rows[i].handlerid;
 					rowArray['masknum'] = rows[i].masknum;
 					rowArray['loadboardid'] = rows[i].loadboardid;
+					rowArray['ftc'] = rows[i].ftc;
+
 				
 					aaData.push(rowArray);
 				}
@@ -405,7 +407,7 @@ function getDataFromDeviceID(sqlstr, cb) {
 					rowArray['startDt'] = rows[i].startdt.toString("MMM dd HH:mm");
 
 					var monEnd = rows[i].enddt.getMonth() +1; //since getMonth() is in [0-11] range
-					rowArray['endDt'] = rows[i].enddt.getFullYear() +'-'+ monEnd +'-'+ rows[i].enddt.getDate();					
+					rowArray['endDt'] = rows[i].enddt.toString("MMM dd HH:mm");					
 
 					var rawTesterID = rows[i].testerid.toUpperCase();
 					if(rawTesterID.indexOf('KYEC')!=-1){

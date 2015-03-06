@@ -305,6 +305,7 @@ $(function() {
 			{
 				params['type'] = 'OEE';
 				var instr = userInput.trim();
+				instr = instr.replace(/\s{2,}/g, ' ');	//replace all consecutive white spaces to single space
 
 				var insplit = instr.split(' ');
 				if(insplit[0]=='OEE') params['factory'] = insplit[1].toUpperCase();
@@ -346,6 +347,7 @@ $(function() {
 						$('#OEE_t2k').hide();
 						$('#OEE_93k').hide();
 						$('#OEE_total').hide();
+						$('#OEE_weekly').hide();
 						$('#ttResult').show();
 						//for lotid based query result display to datatable
 						if(params['type'] == 'lotid')
@@ -388,6 +390,7 @@ $(function() {
 						{
 								var columns = [
 									{"sTitle": "Date",			"mData": "lotstartdt"}, 
+									{"sTitle": "FTC",				"mData": "ftc"}, 
 									{"sTitle": "LotID",			"mData": "lotid"}, 
 									{"sTitle": "Device",		"mData": "deviceid"}, 
 									{"sTitle": "Package",		"mData": "packageid"},
@@ -477,7 +480,7 @@ $(function() {
 									{"sTitle": "Handlerid",		"mData": "handlerid"}, 
 									{"sTitle": "packageid",		"mData": "packageid"},  
 									{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
-									{"sTitle": "Status",			"mData": "category"},
+									{"sTitle": "Status",			"mData": "category"}
 								];
 								//[ref] refer to table property: http://legacy.datatables.net/ref
 								var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
@@ -507,22 +510,27 @@ $(function() {
 								$('#OEE_93k').empty();
 								$('#OEE_t2k').empty();
 								$('#OEE_total').empty();
+								$('#OEE_weekly').empty();
 
-								var svgW = 1300;
-								var svgH = 600;
+								var svgW = 700;
+								var svgH = 320;
 
 								var svg_93k = dimple.newSvg("#OEE_93k", svgW, svgH);
-								plotXOEE_by_Dimple(reply, "93K", svg_93k, "Down time distribution for A93K");
+								plotTimeSlotBarChart_by_Dimple(reply, "93K", svg_93k, "Down time [A93K]", "Percentage");
 
 								var svg_t2k = dimple.newSvg("#OEE_t2k", svgW, svgH);
-								plotXOEE_by_Dimple(reply, "T2K", svg_t2k, "Down time distribution for T2K");
+								plotTimeSlotBarChart_by_Dimple(reply, "T2K", svg_t2k, "Down time [T2K]", "Percentage");
 
 								var svg_total = dimple.newSvg("#OEE_total", svgW, svgH);
-								plotXOEE_by_Dimple(reply, "TOTAL",svg_total, "Down time distribution for Both");
+								plotTimeSlotBarChart_by_Dimple(reply, "TOTAL", svg_total, "Down time distribution overall", "Percentage");
+
+								var svg_xoee_line = dimple.newSvg("#OEE_weekly", svgW, svgH);
+								plotXOEELineChart_by_Dimple(reply, "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
 
 								$('#OEE_93k').show();
 								$('#OEE_t2k').show();
 								$('#OEE_total').show();
+								$('#OEE_weekly').show();
 						}
 				},
 				error: function(response) { // if error occured
@@ -533,26 +541,31 @@ $(function() {
 
 });
 
-function plotXOEE_by_Dimple(dataSource, platform, svg, title){
+function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
 				var data = jQuery.grep(dataSource, function( n, i ) {
 					return		((n.platform.toUpperCase()==platform) 
 									&& (n.category.toUpperCase()!=="MTE") 
 									&& (n.category.toUpperCase()!=="PTE")
 									&& (n.category.toUpperCase()!=="IDLE")
 									&& (n.category.toUpperCase()!=="MFGHOUR")
-									&& (n.category.toUpperCase()!=="EARNHOUR")
+									&& (n.category.toUpperCase()!=="XOEE")
 								);
 				});
 
 				DBG = data;
 			
 				var c = new dimple.chart(svg, data);
-				c.setBounds(65, 45, 700, 500);						 //x,y, width, height
-				c.addCategoryAxis("x", ["ww", "platform"]);
-				c.addPctAxis("y", "hours");
-				c.addSeries("category", dimple.plot.bar);
-				var clegend = c.addLegend(900, 150, 50, 200, "right");	//x,y, width, height							
+				c.setBounds(85, 45, 400, 250);						 //x,y, width, height
+				var xaxis = c.addCategoryAxis("x", ["ww"]);
+				var yaxis = c.addPctAxis("y", "hours");			
+				c.addSeries(["hours", "category"], dimple.plot.bar);
+				var clegend = c.addLegend(480, 60, 50, 200, "right");	//x,y, width, height
+				yaxis.addOrderRule("hours");						
 				c.draw();
+				yaxis.titleShape.text(ytitle);
+				//dimple fix, adjust the title text for yaxis, otherwise it will overlap with yaxis tickers
+				yaxis.titleShape.attr("y", "150");
+				xaxis.titleShape.attr("y", "320");
 				//dimple fix, see https://github.com/PMSI-AlignAlytics/dimple/issues/34
 				clegend.shapes.selectAll("text").attr("dy", "8");  
 
@@ -562,7 +575,37 @@ function plotXOEE_by_Dimple(dataSource, platform, svg, title){
 					 .style("text-anchor", "middle")
 					 .style("font-family", "sans-serif")
 					 .style("font-weight", "bold")
-					 .text(title);
+					 .text(chartTitle);
+}
+
+function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
+				var data = jQuery.grep(dataSource, function( n, i ) {
+					return		(n.category.toUpperCase()=="XOEE");
+				});
+
+				DBG = data;
+
+				var c = new dimple.chart(svg, data);
+				c.setBounds(85, 45, 400, 250);
+				var xaxis = c.addCategoryAxis("x", "ww");
+				var yaxis = c.addMeasureAxis("y", "hours");
+				c.addSeries("platform", dimple.plot.line);
+				var clegend = c.addLegend(480, 60, 50, 200, "right");
+				yaxis.overrideMin = 30;
+				c.draw();
+				yaxis.titleShape.text(ytitle);
+				yaxis.titleShape.attr("y", "150");
+				xaxis.titleShape.attr("y", "320");
+				
+				clegend.shapes.selectAll("text").attr("dy", "8"); 
+
+				svg.append("text")
+					 .attr("x", c._xPixels() + c._widthPixels() / 2)
+					 .attr("y", c._yPixels() - 20)
+					 .style("text-anchor", "middle")
+					 .style("font-family", "sans-serif")
+					 .style("font-weight", "bold")
+					 .text(chartTitle);
 }
 
 var DBG;

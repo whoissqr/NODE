@@ -7,8 +7,15 @@ body {
 	padding: 50px;
   font: 16px "sans-serif", Helvetica, Arial, sans-serif;
 }
+
+.boxHorizontal {height: 50%; width:100%; margin: 0; padding: 0;}
+.left  {width: 48%; margin: 0;}
+.blank {width: 4%; margin: 0;}
+.right {width: 48%; margin: 0;}
+.left, .right, .blank {display: inline-block; *display: inline; zoom: 1; vertical-align: top;}
+
 /*
-|  header    |
+|___header___|
 | nav | main |
 | nav | main |
 */
