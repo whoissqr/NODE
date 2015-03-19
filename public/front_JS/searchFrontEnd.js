@@ -6,9 +6,8 @@ factoryArray.push('SPIL');
 factoryArray.push('ATK');
 
 $(document).ready(function() {	
-		$(".datepicker").datepicker();
-		$('#startDT').prop("disabled", true);
-		$('#endDT').prop("disabled", true);
+		//init the div components
+		initPage();
 
 		//--- front end twitter typeahead handler for search engine ---
 		var houndFactory = new Bloodhound({
@@ -253,6 +252,8 @@ $(function() {
 			e.preventDefault();
 
 			console.log('btn_search_query clicked');
+			$('#custom-templates .tt-dropdown-menu').hide();  //retract the drop down suggestions if necessary
+
 			$('#msgArea').val('');
 			
 			var params = {};
@@ -343,12 +344,10 @@ $(function() {
 				contentType: 'application/json',
 				success: function(reply) {
 						if(!reply) console.log('reply is null.');
-						console.log('AJAX reply success:');
-						$('#OEE_t2k').hide();
-						$('#OEE_93k').hide();
-						$('#OEE_total').hide();
-						$('#OEE_weekly').hide();
-						$('#ttResult').show();
+						console.log('Processing AJAX response...:');
+
+						resetEverything();
+
 						//for lotid based query result display to datatable
 						if(params['type'] == 'lotid')
 						{
@@ -377,12 +376,11 @@ $(function() {
 								$('#dev').text(reply['lotinfo']['deviceid']);
 								$('#pkg').text(reply['lotinfo']['packageid']);
 								$('#factory').text(reply['lotinfo']['factory']);
-								$('#tester').hide();
-								$('#handler').hide();
-								$('#grade').show();
 								$('#lotid').show();
+								$('#grade').show();
 								$('#dev').show();
 								$('#pkg').show();
+								$('#ttResult').show();
 						}
 
 						//for tester id based query result display to datatable
@@ -408,12 +406,9 @@ $(function() {
 								});		
 								$('#factory').text(reply['lotinfo']['factory']);
 								$('#tester').text(reply['lotinfo']['testerid']);
+								$('#factory').show();								
 								$('#tester').show();
-								$('#handler').hide();
-								$('#grade').hide();
-								$('#lotid').hide();
-								$('#dev').hide();
-								$('#pkg').hide();
+								$('#ttResult').show();
 						}
 
 						//for handler id based query result display to datatable
@@ -438,13 +433,8 @@ $(function() {
 													"iDisplayLength": 100													
 								});		
 								$('#handler').text(reply['lotinfo']['handlerid']);
-								$('#factory').hide();
-								$('#tester').hide();
 								$('#handler').show();
-								$('#grade').hide();
-								$('#lotid').hide();
-								$('#dev').hide();
-								$('#pkg').hide();
+								$('#ttResult').show();
 						}
 
 						if(params['type'] == 'deviceid')
@@ -464,13 +454,8 @@ $(function() {
 													"iDisplayLength": 100
 								});		
 								$('#dev').text(reply['lotinfo']['deviceid']);
-								$('#factory').hide();
-								$('#tester').hide();
-								$('#handler').hide();
-								$('#grade').hide();
-								$('#lotid').hide();
 								$('#dev').show();
-								$('#pkg').hide();
+								$('#ttResult').show();
 						}
 
 						if(params['type'] == 'factory')
@@ -492,45 +477,65 @@ $(function() {
 								});		
 								$('#factory').text(params['value']);
 								$('#factory').show();
-								$('#tester').hide();
-								$('#handler').hide();
-								$('#grade').hide();
-								$('#lotid').hide();
-								$('#dev').hide();
-								$('#pkg').hide();
+								$('#ttResult').show();
 						}
 
 						if(params['type'] == 'OEE')
 						{
-								//hide the datatable div
-								$('#ttResult').empty();
-								$('#ttResult').hide();
+								hideInfoButtonGroup();
 
-								//re-init the chart object
-								$('#OEE_93k').empty();
-								$('#OEE_t2k').empty();
-								$('#OEE_total').empty();
-								$('#OEE_weekly').empty();
-
+								//plot the chart
 								var svgW = 700;
 								var svgH = 320;
 
 								var svg_93k = dimple.newSvg("#OEE_93k", svgW, svgH);
-								plotTimeSlotBarChart_by_Dimple(reply, "93K", svg_93k, "Down time [A93K]", "Percentage");
+								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "93K", svg_93k, "Down time [A93K]", "Percentage");
 
 								var svg_t2k = dimple.newSvg("#OEE_t2k", svgW, svgH);
-								plotTimeSlotBarChart_by_Dimple(reply, "T2K", svg_t2k, "Down time [T2K]", "Percentage");
+								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
 
 								var svg_total = dimple.newSvg("#OEE_total", svgW, svgH);
-								plotTimeSlotBarChart_by_Dimple(reply, "TOTAL", svg_total, "Down time distribution overall", "Percentage");
+								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "TOTAL", svg_total, "Down time distribution overall", "Percentage");
 
 								var svg_xoee_line = dimple.newSvg("#OEE_weekly", svgW, svgH);
-								plotXOEELineChart_by_Dimple(reply, "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
+								plotXOEELineChart_by_Dimple(reply['forGraph'], "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
 
 								$('#OEE_93k').show();
 								$('#OEE_t2k').show();
 								$('#OEE_total').show();
 								$('#OEE_weekly').show();
+								$($("#tabs").find("li")[1]).show();
+								$($("#tabs").find('#Graph')).show();
+
+								//plot the table
+								var tableContent = JSON.parse(reply['forTable']);
+								var columns = [
+									{"sTitle": "WW",					"mData": "ww"},
+									{"sTitle": "Tester",			"mData": "platform"},
+									{"sTitle": "EarnH",				"mData": "earnhour"},
+									{"sTitle": "ReTest",			"mData": "rthour"}, 
+									{"sTitle": "Verify",			"mData": "verifyhour"},  
+									{"sTitle": "QCE",					"mData": "qcehour"},  
+									{"sTitle": "Setup",				"mData": "setup"},
+									{"sTitle": "Down",				"mData": "down"},
+									{"sTitle": "PM",					"mData": "pm"},
+									{"sTitle": "Others",			"mData": "others"},
+									{"sTitle": "MTE",					"mData": "mte"},
+									{"sTitle": "PTE",					"mData": "pte"},
+									{"sTitle": "IDLE",				"mData": "idle"},
+									{"sTitle": "Shutdown",		"mData": "shutdown"},
+									{"sTitle": "Unknown",			"mData": "unknown"},
+									{"sTitle": "xOEE",				"mData": "xoee"}
+								];
+								//[ref] refer to table property: http://legacy.datatables.net/ref
+								var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+													"destroy":true,
+													"aoColumns": columns,
+													"aaData": tableContent,
+													"iDisplayLength": 100,
+													"bAutoWidth": false
+								});	
+								$('#ttResult').show();
 						}
 				},
 				error: function(response) { // if error occured
@@ -542,6 +547,7 @@ $(function() {
 });
 
 function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
+				dataSource = JSON.parse(dataSource);
 				var data = jQuery.grep(dataSource, function( n, i ) {
 					return		((n.platform.toUpperCase()==platform) 
 									&& (n.category.toUpperCase()!=="MTE") 
@@ -551,8 +557,6 @@ function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, y
 									&& (n.category.toUpperCase()!=="XOEE")
 								);
 				});
-
-				DBG = data;
 			
 				var c = new dimple.chart(svg, data);
 				c.setBounds(85, 45, 400, 250);						 //x,y, width, height
@@ -579,11 +583,10 @@ function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, y
 }
 
 function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
+				dataSource = JSON.parse(dataSource);
 				var data = jQuery.grep(dataSource, function( n, i ) {
 					return		(n.category.toUpperCase()=="XOEE");
 				});
-
-				DBG = data;
 
 				var c = new dimple.chart(svg, data);
 				c.setBounds(85, 45, 400, 250);
@@ -606,6 +609,63 @@ function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytit
 					 .style("font-family", "sans-serif")
 					 .style("font-weight", "bold")
 					 .text(chartTitle);
+}
+
+function hideInfoButtonGroup(){
+				$('.infoButton').css("display", "none");
+}
+
+function showInfoButtonGroup(){
+				$('.infoButton').removeAttr("display");
+}
+
+function resetEverything(){
+				$('#ttResult').empty();								
+				$('#OEE_93k').empty();
+				$('#OEE_t2k').empty();
+				$('#OEE_total').empty();
+				$('#OEE_weekly').empty();
+				
+				$('#ttResult').hide();								
+				$('#OEE_93k').hide();
+				$('#OEE_t2k').hide();
+				$('#OEE_total').hide();
+				$('#OEE_weekly').hide();
+
+				$('#factory').hide();
+				$('#tester').hide();
+				$('#handler').hide();
+				$('#lotid').hide();
+				$('#grade').hide();
+				$('#dev').hide();
+				$('#pkg').hide();
+
+				$($("#tabs").find("li")[1]).hide();		//hide graph tab
+				$($("#tabs").find('#Graph')).hide();
+
+				var index = $('#tabs a[href="#Data"]').parent().index();
+				$("#tabs").tabs("option", "active", index);		//select the 1st tab pane
+
+				$('#infoBtnSection').show();
+				$('#resultSection').show();
+				showInfoButtonGroup();		
+}
+
+function initPage(){
+				//init the NAV area (left side of page)
+				$(".datepicker").datepicker();
+				$('#startDT').prop("disabled", true);
+				$('#endDT').prop("disabled", true);
+				$( "#tabs" ).tabs({
+					event: "mouseover"
+				});
+
+				//reset the data in main area
+				resetEverything();
+
+				//hide the information buttons and tabs div
+				$('#infoBtnSection').hide();
+				$('#resultSection').hide();
 }
 
 var DBG;

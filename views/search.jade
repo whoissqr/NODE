@@ -12,7 +12,6 @@ html
 		script(src='https://code.jquery.com/ui/1.11.2/jquery-ui.js')
 		script(src='/javascripts/jquery.dataTables.min.js')
 
-
 		script(src='/javascripts/typeahead.bundle.js')
 		script(src='/javascripts/handlebars-v2.0.0.js')
 		script(src='/front_JS/searchFrontEnd.js')
@@ -28,43 +27,45 @@ html
 
 	body
 		header#header
-			#logo
-				h2 Maintenance Performance Reporting System
+			h3 Maintenance Performance Reporting System
 		main
-			.innertube
-			form#queryForm(method='get')
-				#custom-templates
-					input.typeahead#keystr(type='text', placeholder='lot id, tester id, handler id, device, kyec, spil, xap, atk', size = 60, name='keystr')
-				
-				input#btn_search_query(type='submit')
+			section#formSection
+				form#queryForm(method='get')
+					#custom-templates
+						input.typeahead#keystr(type='text', placeholder='lot id, tester id, handler id, device, kyec, spil, xap, atk', size = 60, name='keystr')
+					
+					input#btn_search_query(type='submit')
 
-			br 
-			br
-			br
+			section#infoBtnSection
+				button#factory.infoButton(disabled='') Factory
+				button#tester.infoButton(disabled='') Tester
+				button#handler.infoButton(disabled='') Handler
+				button#lotid.infoButton(disabled='') lotid
+				button#grade.infoButton(disabled='') grade
+				button#dev.infoButton(disabled='') device
+				button#pkg.infoButton(disabled='') package
 
-			button#factory.displayButton(disabled='') Factory
-			button#tester.displayButton(disabled='') Tester
-			button#handler.displayButton(disabled='') Handler
-			button#lotid.displayButton(disabled='') lotid
-			button#grade.displayButton(disabled='') grade
-			button#dev.displayButton(disabled='') device
-			button#pkg.displayButton(disabled='') package
+			section#resultSection		
+				#tabs
+					ul
+						li
+							a(href='#Data') Data			
+						li
+							a(href='#Graph') Graph
+					#Data
+						#ttResult
 
-			br
-			br
-			hr
-			#ttResult
-			.boxHorizontal
-				.left#OEE_total
-				.blank
-				.right#OEE_weekly
-			.boxHoritzontal
-				.left#OEE_93k
-				.blank
-				.right#OEE_t2k
-			
+					#Graph
+						.boxHorizontal
+							.left#OEE_total
+							.blank
+							.right#OEE_weekly
+						.boxHoritzontal
+							.left#OEE_93k
+							.blank
+							.right#OEE_t2k
+
 		nav#nav
-			.innertube
 			br
 			br
 			br
@@ -81,12 +82,12 @@ html
 				| From
 				br
 				br
-				input#startDT.rBtnTime.datepicker(type='text')
+				input#startDT.radioBtnTime.datepicker(type='text')
 				br
 				h5#btnLabel To
 				br
 				br
-				input#endDT.rBtnTime.datepicker(type='text')
+				input#endDT.radioBtnTime.datepicker(type='text')
 				br
 				br
 				br

@@ -24,14 +24,18 @@ body {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 70px;
+	height: 50;
 	overflow: hidden; /* Disables scrollbars on the header frame. To enable scrollbars, change "hidden" to "scroll" */
 	background: #B0B0B0;
 }
 
+#logo {
+	padding:10px;
+}
+
 #nav {
 	position: absolute;
-	top: 70px;
+	top: 50px;
 	left: 0;
 	bottom: 0;
 	width: 230px;
@@ -40,25 +44,38 @@ body {
 
 main {
 	position: fixed;
-	top: 70px; /* Set this to the height of the header */
-	left: 230px;
+	top: 50px;    /* Set this to the height of the header */
+	left: 230px;  /* Set this to the width of the nav     */
 	right: 0;
 	bottom: 0;
-	overflow: auto;
-	background: #fff;
-	margin-left: 20px; 
 	overflow: scroll;
+	background: #fff;
+	margin-left: 0px;
+	display: flex;
+  flex-flow: column nowrap;
+  flex-shrink: 0;
+  align-content: space-around; 
+}
+
+section {
+	margin-left:10px;
+	margin-top:20px;
+}
+
+#resultSection {
+	margin-left:7px;
+}
+
+#tabs {
+	border: none;
+	margin-left:0px;
 }
 
 .innertube {
 	margin: 15px; /* Provides padding for the content */
 }
 
-#logo {
-	padding:10px;
-}
-
-.rBtnTime, #btnLabel{
+.radioBtnTime, #btnLabel{
 	position: fixed;
 	left: 20px;
 }
@@ -68,7 +85,7 @@ main {
 	left: 4px;
 }
 
-.rBtnTime{
+.radioBtnTime{
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
@@ -77,9 +94,9 @@ a {
   color: #00B7FF;
 }
 
-.displayButton{
+.infoButton{
 	width: 175px;
-	height: 25px;
+	height: 30px;
 }
 
 td, th { text-align: left }

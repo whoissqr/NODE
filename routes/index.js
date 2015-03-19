@@ -207,7 +207,7 @@ router.get('/universalQuery', function(req, res) {
 						var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
 						sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
 						sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
-						getDataFromDeviceID(sqlstr, function(d) {
+						getDataFromDeviceID(sqlstr, function(d) {					
 							res.json(d);
 						});
 						break;
@@ -218,14 +218,9 @@ router.get('/universalQuery', function(req, res) {
 						});
 						break;
 			 case 'OEE':
-						var sqlstr = 'SELECT ww, platform, ';
-						sqlstr += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\', \'xoee\']) AS \"category\",';
-						sqlstr += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee]) AS \"hours\"';
-						sqlstr += ' from oee where osat=\'' + params['factory'] + '\' and years=\'2015\'';
-						getOEEData(sqlstr, function(d) {
-							//res.json(d);
-							res.writeHead(200, {'content-type':'application/json', 'content-length':Buffer.byteLength(d)}); 
-							res.end(d);
+			 			var osat = params['factory'];			
+						getOEEData(osat, function(d) {
+							res.json(d);
 						});
 						break;
 			 case 'error':
@@ -438,18 +433,57 @@ function getDataFromFactory(testers, cb) {
 		});
 }
 
-function getOEEData(sqlstr, cb){
-		console.log(sqlstr);
+function getOEEData(osat, cb){
+		var oeeData = {};
+		var resultA;
+		var resultB;
+
 		query.connectionParameters = config.reportConnStr;
-		query(sqlstr, function(err, rows, result) {
-				assert.equal(rows, result.rows);
-				console.log(rows.length + " rows returned.");
-				if(rows.length==0) {
-						cb(null);
-				}
-				var json = JSON.stringify(result.rows);
-				cb(json);
-		});
+		async.parallel([ 
+				function(callback) {						
+						var sqlstrA = 'SELECT ww, platform, ';
+						sqlstrA += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\', \'xoee\']) AS \"category\",';
+						sqlstrA += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee]) AS \"hours\"';
+						sqlstrA += ' from oee where osat=\'' + osat + '\' and years=\'2015\'';
+
+						//console.log('sqlstrA = ' + sqlstrA);
+
+						query(sqlstrA, function(err, rows, result) {
+								assert.equal(rows, result.rows);
+								console.log(rows.length + " rows returned.");
+								if(rows.length==0) {
+										cb(null);
+								}
+								resultA = JSON.stringify(result.rows);
+								callback();
+						});
+				},
+
+				function(callback) {
+						var sqlstrB = 'select ww, platform, earnhour, rthour, verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee';
+						sqlstrB += ' from oee where osat=\'' + osat + '\' and years=\'2015\'';
+
+						//console.log('sqlstrB = ' + sqlstrB);
+
+						query(sqlstrB, function(err, rows, result) {
+								assert.equal(rows, result.rows);
+								console.log(rows.length + " rows returned.");
+								if(rows.length==0) {
+										cb(null);
+								}
+								resultB = JSON.stringify(result.rows);
+								callback();
+						});
+				}],
+
+				function(err, results) {
+					if (err) {
+							throw err;
+					}
+					oeeData['forGraph'] = resultA;
+					oeeData['forTable'] = resultB;
+					cb(oeeData);					
+				});
 }
 
 var lastE10stateArray = new Array();
