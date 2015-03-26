@@ -83,6 +83,7 @@ section {
 #msgArea{
 	position: fixed;
 	left: 4px;
+	width: 220px;
 }
 
 .radioBtnTime{

@@ -488,17 +488,22 @@ $(function() {
 								var svgW = 700;
 								var svgH = 320;
 
-								var svg_93k = dimple.newSvg("#OEE_93k", svgW, svgH);
-								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "93K", svg_93k, "Down time [A93K]", "Percentage");
-
-								var svg_t2k = dimple.newSvg("#OEE_t2k", svgW, svgH);
-								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
-
-								var svg_total = dimple.newSvg("#OEE_total", svgW, svgH);
+								var svg_total = dimple.newSvg("#ChartTab1", svgW, svgH);
 								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "TOTAL", svg_total, "Down time distribution overall", "Percentage");
+								$('#ChartTab1').appendTo("#OEE_total");
 
-								var svg_xoee_line = dimple.newSvg("#OEE_weekly", svgW, svgH);
+								var svg_xoee_line = dimple.newSvg("#ChartTab2", svgW, svgH);
 								plotXOEELineChart_by_Dimple(reply['forGraph'], "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
+								$('#ChartTab2').appendTo("#OEE_weekly");
+
+								var svg_93k = dimple.newSvg("#ChartTab3", svgW, svgH);
+								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "93K", svg_93k, "Down time [A93K]", "Percentage");
+								$('#ChartTab3').appendTo("#OEE_93k");
+								
+								var svg_t2k = dimple.newSvg("#ChartTab4", svgW, svgH);
+								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
+								$('#ChartTab4').appendTo("#OEE_t2k");
+
 
 								$('#OEE_93k').show();
 								$('#OEE_t2k').show();
@@ -510,10 +515,10 @@ $(function() {
 								//plot the table
 								var tableContent = JSON.parse(reply['forTable']);
 								var columns = [
-									{"sTitle": "WW",					"mData": "ww"},
+									{"sTitle": "Week",				"mData": "ww"},
 									{"sTitle": "Tester",			"mData": "platform"},
 									{"sTitle": "EarnH",				"mData": "earnhour"},
-									{"sTitle": "ReTest",			"mData": "rthour"}, 
+									{"sTitle": "RT",			"mData": "rthour"}, 
 									{"sTitle": "Verify",			"mData": "verifyhour"},  
 									{"sTitle": "QCE",					"mData": "qcehour"},  
 									{"sTitle": "Setup",				"mData": "setup"},
@@ -563,7 +568,7 @@ function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, y
 				var xaxis = c.addCategoryAxis("x", ["ww"]);
 				var yaxis = c.addPctAxis("y", "hours");			
 				c.addSeries(["hours", "category"], dimple.plot.bar);
-				var clegend = c.addLegend(480, 60, 50, 200, "right");	//x,y, width, height
+				var clegend = c.addLegend(540, 60, 50, 200, "right");	//x,y, width, height
 				yaxis.addOrderRule("hours");						
 				c.draw();
 				yaxis.titleShape.text(ytitle);
@@ -593,7 +598,7 @@ function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytit
 				var xaxis = c.addCategoryAxis("x", "ww");
 				var yaxis = c.addMeasureAxis("y", "hours");
 				c.addSeries("platform", dimple.plot.line);
-				var clegend = c.addLegend(480, 60, 50, 200, "right");
+				var clegend = c.addLegend(540, 60, 50, 200, "right");
 				yaxis.overrideMin = 30;
 				c.draw();
 				yaxis.titleShape.text(ytitle);

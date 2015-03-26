@@ -218,7 +218,7 @@ router.get('/universalQuery', function(req, res) {
 						});
 						break;
 			 case 'OEE':
-			 			var osat = params['factory'];			
+						var osat = params['factory'];			
 						getOEEData(osat, function(d) {
 							res.json(d);
 						});
@@ -432,19 +432,33 @@ function getDataFromFactory(testers, cb) {
 			cb(data);
 		});
 }
-
+		
 function getOEEData(osat, cb){
 		var oeeData = {};
 		var resultA;
 		var resultB;
 
 		query.connectionParameters = config.reportConnStr;
+
+		var weekNumber = new Date().getWeek();
+		var startWW = 1;
+		var endWW = weekNumber;
+		if(weekNumber>8) {
+				startWW = weekNumber-8;
+				endWW = weekNumber-1;
+		}else{
+				endWW = weekNumber-1;
+				startWW = 1;
+		}
+
 		async.parallel([ 
 				function(callback) {						
 						var sqlstrA = 'SELECT ww, platform, ';
 						sqlstrA += ' unnest(array[\'earnhour\', \'mfghour\', \'rthour\',\'verifyhour\', \'qcehour\', \'setup\', \'down\', \'pm\', \'others\', \'mte\',\'pte\', \'idle\', \'shutdown\', \'unknown\', \'xoee\']) AS \"category\",';
 						sqlstrA += ' unnest(array[earnhour, mfghour, rthour,verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee]) AS \"hours\"';
 						sqlstrA += ' from oee where osat=\'' + osat + '\' and years=\'2015\'';
+						sqlstrA += ' and ww>=' + startWW ;
+						sqlstrA += ' and ww<=' + endWW;
 
 						//console.log('sqlstrA = ' + sqlstrA);
 
@@ -462,6 +476,8 @@ function getOEEData(osat, cb){
 				function(callback) {
 						var sqlstrB = 'select ww, platform, earnhour, rthour, verifyhour, qcehour, setup, down, pm, others, mte,pte, idle, shutdown, unknown, xoee';
 						sqlstrB += ' from oee where osat=\'' + osat + '\' and years=\'2015\'';
+						sqlstrB += ' and ww>=' + startWW ;
+						sqlstrB += ' and ww<=' + endWW;
 
 						//console.log('sqlstrB = ' + sqlstrB);
 
@@ -475,6 +491,8 @@ function getOEEData(osat, cb){
 								callback();
 						});
 				}],
+
+
 
 				function(err, results) {
 					if (err) {
