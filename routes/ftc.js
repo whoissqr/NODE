@@ -5,9 +5,8 @@ var assert = require('assert');
 var async = require('async');
 var url = require('url');
 var queryString = require('querystring');
-var jQuery = require('jquery');
-var $ = jQuery.create();
 var router = express.Router();
+var _=require('lodash');
 
 /* Display the page to query test time */
 router.get('/', function(req, res) {
@@ -63,9 +62,8 @@ router.get('/', function(req, res) {
 							for (var i = 0; i < rows.length; i++) {
 								testgradeArray.push(rows[i].testgrade.toUpperCase());        
 							}
-							$.each(testgradeArray, function(i, el){
-									if($.inArray(el, testgradeUnique) === -1) testgradeUnique.push(el);
-							});
+
+							testgradeUnique = _.uniq(testgradeArray);
 							callback();
 						});
 				},
@@ -76,9 +74,7 @@ router.get('/', function(req, res) {
 							for (var i = 0; i < rows.length; i++) {
 								testgroupArray.push(rows[i].testgroup.toUpperCase());        
 							}
-							$.each(testgroupArray, function(i, el){
-									if($.inArray(el, testgroupUnique) === -1) testgroupUnique.push(el);
-							});
+							testgroupUnique = _.uniq(testgroupArray);
 							callback();
 						});
 				}], 

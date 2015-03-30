@@ -5,8 +5,7 @@ var assert = require('assert');
 var async = require('async');
 var url = require('url');
 var queryString = require('querystring');
-var jQuery = require('jquery');
-var $ = jQuery.create();
+var _=require('lodash');
 require('datejs');
 var router = express.Router();
 
@@ -29,13 +28,15 @@ router.get('/queryTT', function(req, res) {
 
 	query.connectionParameters = config.reportConnStr;      //connecting to localhost
 	var device, pkg, sites, grade, group;
-	$.each(params, function(){
-			switch(this.name){
-					 case 'device':  device = this.value;  break;
-					 case 'package': pkg    = this.value;  break;
-					 case 'sites':   sites  = this.value;  break;
-					 case 'grade': 	 grade  = this.value;  break;
-					 case 'group':   group  = this.value;  break;
+
+	_.forEach(params, function(item){
+			console.log(item.name);
+			switch(item.name){
+					 case 'device':  device = item.value;  break;
+					 case 'package': pkg    = item.value;  break;
+					 case 'sites':   sites  = item.value;  break;
+					 case 'grade': 	 grade  = item.value;  break;
+					 case 'group':   group  = item.value;  break;
 			}
 	});				
 
@@ -95,18 +96,18 @@ router.get('/queryFTC', function(req, res) {
 	query.connectionParameters = config.reportConnStr;     
 	var sqlstr = 'select device, package AS pkg, lotid, scd, testgrade, min(startdt) AS startdt, max(enddt) AS enddt, string_agg(ftc, \'-\' order by startdt) AS ftcstr from testtime ';
 	//console.log(params);
-	$.each(params, function(){
-			switch(this.name){
-					 case 'device': sqlstr +=  'where device=\'' + this.value+ '\' ';  break;
+	_.forEach(params, function(item){
+			switch(item.name){
+					 case 'device': sqlstr +=  'where device=\'' + item.value+ '\' ';  break;
 
-					 case 'package': if(this.value != '-')  sqlstr += 'and package=\'' + this.value+ '\' ';  break;
+					 case 'package': if(item.value != '-')  sqlstr += 'and package=\'' + item.value+ '\' ';  break;
 
-					 case 'grade': 	if(this.value != '-')  sqlstr += 'and lower(testgrade)=\'' + this.value.toLowerCase() + '\' ';  break;
+					 case 'grade': 	if(item.value != '-')  sqlstr += 'and lower(testgrade)=\'' + item.value.toLowerCase() + '\' ';  break;
 
-					 case 'group':  if(this.value != '-')  sqlstr += 'and lower(testgroup)=\'' + this.value.toLowerCase() + '\' ';  break;
+					 case 'group':  if(item.value != '-')  sqlstr += 'and lower(testgroup)=\'' + item.value.toLowerCase() + '\' ';  break;
 
-					 case 'tp':   if(this.value.indexOf('non-LV') !=-1)  sqlstr += ' and lower(testprog) not like \'%lv%\' '; 
-												if(this.value.indexOf('only-LV') !=-1) sqlstr += ' and lower(testprog) like \'%lv%\' '; 
+					 case 'tp':   if(item.value.indexOf('non-LV') !=-1)  sqlstr += ' and lower(testprog) not like \'%lv%\' '; 
+												if(item.value.indexOf('only-LV') !=-1) sqlstr += ' and lower(testprog) like \'%lv%\' '; 
 												break;
 			}
 	});
@@ -134,8 +135,7 @@ router.get('/queryFTC', function(req, res) {
 				//ftc2 = "SP-SQ"
 				var ftcArray = rows[i].ftcstr.toUpperCase().split("-");
 				var ftc2="";
-
-				$.each(ftcArray, function(i, el){
+				_.forEach(ftcArray, function(el){
 						if(el.indexOf("R")!=-1) return;   //remove retest ftc code
 						var temp = el.replace(/[0-9]*$/, "");  
 						var regex = new RegExp(temp+"$");
@@ -145,6 +145,7 @@ router.get('/queryFTC', function(req, res) {
 							ftc2+="-";
 						}
 				});
+
 				ftc2 = ftc2.slice(0, -1);
 				//console.log(ftcArray + ":" + ftc2);
 				rowArray['FTC-seq'] = ftc2;

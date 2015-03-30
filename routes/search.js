@@ -5,8 +5,6 @@ var queryMPRS = require('pg-query');
 var assert = require('assert');
 var async = require('async');
 var url = require('url');
-var jQuery = require('jquery');
-var $ = jQuery.create();
 var router = express.Router();
 var _=require('lodash');
 
@@ -30,7 +28,11 @@ router.get('/', function(req, res) {
 								sqlstr += '\' and char_length(lotid)=7';
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
+							if(err) {
+								console.error('Error retrieving recent lotid from database!');
+								callback(err);
+								return;
+							}
 							for (var i = 0; i < rows.length; i++) {
 								recentLotArray.push(rows[i].lotid.toUpperCase());        
 							}
@@ -44,7 +46,11 @@ router.get('/', function(req, res) {
 								sqlstr += ' where char_length(lotid)=7';
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
+							if(err) {
+								console.error('Error retrieving handlerid from database!');
+								callback(err);
+								return;
+							}
 							for (var i = 0; i < rows.length; i++) {
 								handlerArray.push(rows[i].handlerid.toUpperCase());        
 							}
@@ -58,7 +64,11 @@ router.get('/', function(req, res) {
 						sqlstr += ' where char_length(lotid)=7';
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
+							if(err) {
+								console.error('Error retrieving deviceid from database!');
+								callback(err);
+								return;
+							}
 							for (var i = 0; i < rows.length; i++) {
 								var str = rows[i].deviceid.toUpperCase();
 								var regex = /^[A-Za-z0-9]+$/;
@@ -75,7 +85,11 @@ router.get('/', function(req, res) {
 	
 						console.log(sqlstr);
 						queryMPRS(sqlstr, function(err, rows, result) {
-							assert.equal(rows, result.rows);
+							if(err) {
+								console.error('Error retrieving testerid from database!');
+								callback(err);
+								return;
+							}
 							for (var i = 0; i < rows.length; i++) {
 								testerArray.push(rows[i].testerid.toUpperCase());        
 							}
@@ -86,15 +100,18 @@ router.get('/', function(req, res) {
 
 				function(err, results) {
 					if (err) {
-							throw err;
+							console.error('Error prefetching data');
+					}else{
+							console.log('prefetched dev and pkg...');
+
 					}
+
 					recentLotArray.sort();
-					console.log('prefetched dev and pkg...');
-					res.render('search', {testerArray:testerArray, 
-																handlerArray:handlerArray, 
-																deviceArray:deviceArray, 
-																recentLotArray:recentLotArray
-																});								
+					res.render('search',	{	testerArray:testerArray, 
+												handlerArray:handlerArray, 
+												deviceArray:deviceArray, 
+												recentLotArray:recentLotArray
+											});								
 				});
 });
 

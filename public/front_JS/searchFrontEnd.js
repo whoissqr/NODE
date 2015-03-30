@@ -671,6 +671,15 @@ function initPage(){
 				//hide the information buttons and tabs div
 				$('#infoBtnSection').hide();
 				$('#resultSection').hide();
+
+
+				if ( (recentLotArray.length==0) || 
+					 (deviceArray.length==0)	||
+					 (handlerArray.length==0)	||
+					 (testerArray.length==0) 	)					
+				{
+					$('#msgArea').val('Database connection error.');		
+				}
 }
 
 var DBG;

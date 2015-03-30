@@ -24,7 +24,7 @@ $(function() {
 						}
 						//for special case of EasyPath (3rd letter of device id is alphabetical)
 						if(selectedFamily==999){
-							console.log(currentDev[2]);
+							//console.log(currentDev[2]);
 							if(isNaN(currentDev[2]))	{
 								$("#deviceGrp").append('<option>'+currentDev+'</option>');	
 							}
@@ -48,9 +48,8 @@ $(function() {
 		// --- front end AJAX handler for test time query in page /TT ---
 		$("#btn_tt_query").click(function(e){
 			e.preventDefault();
-			//console.log('btn_ftc_query clicked');
-			var params = $("#queryForm").serializeArray();;
-			//console.log("params: " + params);
+			console.log('btn_tt_query clicked');
+			var params = $("#queryForm").serializeArray();
 
 			$.ajax({
 				url: 'queryTT',	
@@ -87,7 +86,7 @@ $(function() {
 		$("#btn_ftc_query").click(function(e){
 			e.preventDefault();
 			//console.log('btn_ftc_query clicked');
-			var params = $("#queryForm").serializeArray();;
+			var params = $("#queryForm").serializeArray();
 			//console.log("params: " + params);
 
 			$.ajax({
@@ -120,3 +119,5 @@ $(function() {
 		});		
 
 });
+
+var DBG;
