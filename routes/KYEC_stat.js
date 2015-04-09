@@ -5,9 +5,7 @@ var assert = require('assert');
 var async = require('async');
 var url = require('url');
 var queryString = require('querystring');
-
 var router = express.Router();
-
 var lastE10stateArray = new Array();
 
 var getLastE10Status = function(testerid, cb) { // called once for each project row	    
@@ -32,7 +30,7 @@ var getLastE10Status = function(testerid, cb) { // called once for each project 
 };
 
 /* GET data from postgres page. */
-router.get('/', function(req, res) {
+router.get('/kyec', function(req, res) {
 		query.connectionParameters = config.mprsConnStr;      //connecting to xap-opsweb01
 		var testers = new Array();	
 		query('SELECT DISTINCT \"testerid\" AS tester from lotintro where lotstartdt>\'2014-8-01\'', function(err, rows, result) {

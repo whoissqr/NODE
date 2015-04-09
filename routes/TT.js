@@ -10,7 +10,7 @@ var _=require('lodash');
 var router = express.Router();
 
 /* Display the page to query test time */
-router.get('/', function(req, res) {
+router.get('/tt', function(req, res) {
 			query.connectionParameters = config.reportConnStr;      //connecting to localhost
 			var packageArray = new Array();
 			var devPkg = {};

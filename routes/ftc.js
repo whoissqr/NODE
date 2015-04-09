@@ -9,7 +9,7 @@ var router = express.Router();
 var _=require('lodash');
 
 /* Display the page to query test time */
-router.get('/', function(req, res) {
+router.get('/ftc', function(req, res) {
 			query.connectionParameters = config.reportConnStr;      //connecting to localhost
 			var packageArray = new Array();
 			var devPkg = {};

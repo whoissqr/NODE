@@ -13,7 +13,7 @@ var ThirtyDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in mi
 var dateStr = ThirtyDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
 
 /* Display the page to query test time */
-router.get('/', function(req, res) {
+router.get('/search', function(req, res) {
 			queryMPRS.connectionParameters = config.mprsConnStr;      //connecting to localhost
 			//queryRpt.connectionParameters = config.reportConnStr;
 			var recentLotArray = new Array();

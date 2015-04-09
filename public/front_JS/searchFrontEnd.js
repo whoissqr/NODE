@@ -143,7 +143,7 @@ function getTesterFromFactory(factory){
 		return factoryTestersArray;
 }
 
-var today = new Date();
+var today = new Date(2015, 2, 26);	//March 26, //month is zero based
 var startDate = new Date(today -  1000 * 60 * 60 * 24 * 7); //Date is in millisecs;
 var endDate = today;
 
@@ -247,7 +247,7 @@ $(function() {
 			}			
 		});
 
-		// --- front end AJAX handler for universal query [lotid]
+		// --- front end AJAX handler for universal query
 		$("#btn_search_query").click(function(e){
 			e.preventDefault();
 

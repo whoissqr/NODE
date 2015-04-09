@@ -14,7 +14,7 @@ var router = express.Router();
    then use {lotid, lotstartdate} to retrieve all 1st insertion lot records, then add up lots per device;
    then return the 1st 20 device id which tops inocming material quantity;
  */
-router.get('/', function(req, res) {
+router.get('/vol', function(req, res) {
 		query.connectionParameters = config.reportConnStr;      //connecting to localhost
 		var deviceArray = new Array();
 		var sqlstr =   'select distinct t1.device, sum(t1.qtyin) as totalqtyin, sum(t1.qtyout) as totalqtyout'
