@@ -39,7 +39,7 @@ router.get('/vol', function(req, res) {
 				device.value = rows[i].totalqtyout;
 				deviceArray.push(device);        
 			}
-			res.render('d3t1', {deviceArray:deviceArray});						
+			res.render('d3_vol', {deviceArray:deviceArray});						
 		});
 });
 

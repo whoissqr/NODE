@@ -57,7 +57,7 @@ router.get('/kyec', function(req, res) {
 										lastE10state_t2k.push(lastE10stateArray[i]);
 									}
 				}       		        		        
-				res.render('dal', {t2ktesters:lastE10state_t2k, v93ktesters:lastE10state_93k});	
+				res.render('kyec_status', {t2ktesters:lastE10state_t2k, v93ktesters:lastE10state_93k});	
 			});
 		});
 });
