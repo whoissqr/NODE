@@ -5,17 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+/* index page (home page) (http://localhost:3000/) */
 var index = require('./routes/index');
+/* single page application entry (http://localhost:3000/search) */
 var search = require('./routes/search');
-var tt = require('./routes/tt');
-var ftc = require('./routes/ftc');
-var KYEC_stat = require('./routes/KYEC_stat');
-var volPerDevice = require('./routes/topVolPerDevice');
-
-/* AJAX server side code */
+/* AJAX server side code for /search page */
 var search_AJAX = require('./routes/search_AJAX');
-var tt_AJAX = require('./routes/tt_AJAX');
-var ftc_AJAX = require('./routes/ftc_AJAX');
 
 var app = express();
 
@@ -31,19 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-
 app.use('/', search);
 app.use('/', search_AJAX);
-
-app.use('/', tt);
-app.use('/', tt_AJAX);
-
-app.use('/', ftc);
-app.use('/', ftc_AJAX);
-
-app.use('/', volPerDevice);
-app.use('/', KYEC_stat);
-
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

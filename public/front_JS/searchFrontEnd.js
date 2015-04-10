@@ -504,6 +504,11 @@ $(function() {
 								plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
 								$('#ChartTab4').appendTo("#OEE_t2k");
 
+								$('#tabs').append('<div id="ChartTab1">');
+								$('#tabs').append('<div id="ChartTab2">');
+								$('#tabs').append('<div id="ChartTab3">');
+								$('#tabs').append('<div id="ChartTab4">');
+
 
 								$('#OEE_93k').show();
 								$('#OEE_t2k').show();
@@ -653,6 +658,7 @@ function resetEverything(){
 
 				$('#infoBtnSection').show();
 				$('#resultSection').show();
+
 				showInfoButtonGroup();		
 }
 
