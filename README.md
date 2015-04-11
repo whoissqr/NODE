@@ -18,7 +18,9 @@ When user keys in few characters, the Twitter typeahead library will prompt user
 When 'Submit' button is clicked, form data is sumbitted to backend Node.js and returned using AJAX and row data is presented in tabular forms (jquery.dataTables.min.js)
 
 ![Data shown in table](https://github.com/whoissqr/NODE/blob/master/pic/table.jpg)
+
 ![Data shown in table 2](https://cloud.githubusercontent.com/assets/4846507/6773618/960f97bc-d14e-11e4-8896-afba8f9c3105.jpg)
+
 ![Data shown in chart](https://cloud.githubusercontent.com/assets/4846507/6773617/960009be-d14e-11e4-9985-7dd17944cc69.jpg)
 
 ##Tools and setup
