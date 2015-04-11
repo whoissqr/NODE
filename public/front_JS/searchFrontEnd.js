@@ -28,8 +28,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-						test.push(v.substr(i,v.length));
-						i++;
+					 test.push(v.substr(i,v.length));
+					 i++;
 					}
 				})
 				return test;
@@ -44,8 +44,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-						test.push(v.substr(i,v.length));
-						i++;
+					 test.push(v.substr(i,v.length));
+					 i++;
 					}
 				})
 				return test;
@@ -60,8 +60,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-						test.push(v.substr(i,v.length));
-						i++;
+					 test.push(v.substr(i,v.length));
+					 i++;
 					}
 				})
 				return test;
@@ -343,229 +343,228 @@ $(function() {
 			data: {jsonParams:JSON.stringify(params)},
 			contentType: 'application/json',
 			success: function(reply) {
-					if(!reply) console.log('reply is null.');
-					console.log('Processing AJAX response...:');
+				if(!reply) console.log('reply is null.');
+				console.log('Processing AJAX response...:');
 
-					resetEverything();
+				resetEverything();
 
-					//for lotid based query result display to datatable
-					if(params['type'] == 'lotid')
-					{
-						var columns = [
-							{"sTitle": "Lotstartdt",	"mData": "lotstartdt"}, 
-							{"sTitle": "FTC",			"mData": "ftc"}, 
-							{"sTitle": "Tester",		"mData": "testerid"}, 
-							{"sTitle": "Handler",		"mData": "handlerid"}, 
-							{"sTitle": "LotSize",		"mData": "xamsqty"}, 
-							{"sTitle": "Testprogname",	"mData": "testprogname"}, 
-							{"sTitle": "Testgroup",	  	"mData": "testgroup"}, 
-							{"sTitle": "Speed",			"mData": "speedgrade"}, 
-							{"sTitle": "Temperature",	"mData": "temperature"},  
-							{"sTitle": "Loadboard",		"mData": "loadboardid"}
-						];
-						//refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": reply['aaData'],
-										"aaSorting":[],
-										"iDisplayLength": 100													
-						});		
-						$('#lotid').text(reply['lotinfo']['lotid']);
-						$('#grade').text(reply['lotinfo']['testgrade']);
-						$('#dev').text(reply['lotinfo']['deviceid']);
-						$('#pkg').text(reply['lotinfo']['packageid']);
-						$('#factory').text(reply['lotinfo']['factory']);
-						$('#lotid').show();
-						$('#grade').show();
-						$('#dev').show();
-						$('#pkg').show();
-						$('#ttResult').show();
-					}
+				//for lotid based query result display to datatable
+				if(params['type'] == 'lotid')
+				{
+					var columns = [
+						{"sTitle": "Lotstartdt",	"mData": "lotstartdt"}, 
+						{"sTitle": "FTC",			"mData": "ftc"}, 
+						{"sTitle": "Tester",		"mData": "testerid"}, 
+						{"sTitle": "Handler",		"mData": "handlerid"}, 
+						{"sTitle": "LotSize",		"mData": "xamsqty"}, 
+						{"sTitle": "Testprogname",	"mData": "testprogname"}, 
+						{"sTitle": "Testgroup",	  	"mData": "testgroup"}, 
+						{"sTitle": "Speed",			"mData": "speedgrade"}, 
+						{"sTitle": "Temperature",	"mData": "temperature"},  
+						{"sTitle": "Loadboard",		"mData": "loadboardid"}
+					];
+					//refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": reply['aaData'],
+							"aaSorting":[],
+							"iDisplayLength": 100													
+					});		
+					$('#lotid').text(reply['lotinfo']['lotid']);
+					$('#grade').text(reply['lotinfo']['testgrade']);
+					$('#dev').text(reply['lotinfo']['deviceid']);
+					$('#pkg').text(reply['lotinfo']['packageid']);
+					$('#factory').text(reply['lotinfo']['factory']);
+					$('#lotid').show();
+					$('#grade').show();
+					$('#dev').show();
+					$('#pkg').show();
+					$('#ttResult').show();
+				}
 
-					//for tester id based query result display to datatable
-					if(params['type'] == 'testerid')
-					{
-						var columns = [
-							{"sTitle": "Date",			"mData": "lotstartdt"}, 
-							{"sTitle": "FTC",			"mData": "ftc"}, 
-							{"sTitle": "LotID",			"mData": "lotid"}, 
-							{"sTitle": "Device",		"mData": "deviceid"}, 
-							{"sTitle": "Package",		"mData": "packageid"},
-							{"sTitle": "Tester",		"mData": "testerid"},  
-							{"sTitle": "Handler",		"mData": "handlerid"}, 
-							{"sTitle": "loadboard",		"mData": "loadboardid"}
-						];
-						//[ref] refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": reply['aaData'],
-										"aaSorting":[],
-										"iDisplayLength": 100
-						});		
-						$('#factory').text(reply['lotinfo']['factory']);
-						$('#tester').text(reply['lotinfo']['testerid']);
-						$('#factory').show();								
-						$('#tester').show();
-						$('#ttResult').show();
-					}
+				//for tester id based query result display to datatable
+				if(params['type'] == 'testerid')
+				{
+					var columns = [
+						{"sTitle": "Date",			"mData": "lotstartdt"}, 
+						{"sTitle": "FTC",			"mData": "ftc"}, 
+						{"sTitle": "LotID",			"mData": "lotid"}, 
+						{"sTitle": "Device",		"mData": "deviceid"}, 
+						{"sTitle": "Package",		"mData": "packageid"},
+						{"sTitle": "Tester",		"mData": "testerid"},  
+						{"sTitle": "Handler",		"mData": "handlerid"}, 
+						{"sTitle": "loadboard",		"mData": "loadboardid"}
+					];
+					//[ref] refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": reply['aaData'],
+							"aaSorting":[],
+							"iDisplayLength": 100
+					});		
+					$('#factory').text(reply['lotinfo']['factory']);
+					$('#tester').text(reply['lotinfo']['testerid']);
+					$('#factory').show();								
+					$('#tester').show();
+					$('#ttResult').show();
+				}
 
-					//for handler id based query result display to datatable
-					if(params['type'] == 'handlerid')
-					{
-						var columns = [
-							{"sTitle": "Date",			"mData": "lotstartdt"}, 
-							{"sTitle": "LotID",			"mData": "lotid"},
-							{"sTitle": "LotSize",		"mData": "qty"}, 
-							{"sTitle": "Tester",		"mData": "testerid"}, 
-							{"sTitle": "Handler",		"mData": "handlerid"},
-							{"sTitle": "Device",		"mData": "deviceid"}, 
-							{"sTitle": "Package",		"mData": "packageid"}, 
-							{"sTitle": "Loadboard",	"mData": "loadboardid"}
-						];
-						//[ref] refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": reply['aaData'],
-										"aaSorting":[],
-										"iDisplayLength": 100													
-						});		
-						$('#handler').text(reply['lotinfo']['handlerid']);
-						$('#handler').show();
-						$('#ttResult').show();
-					}
+				//for handler id based query result display to datatable
+				if(params['type'] == 'handlerid')
+				{
+					var columns = [
+						{"sTitle": "Date",			"mData": "lotstartdt"}, 
+						{"sTitle": "LotID",			"mData": "lotid"},
+						{"sTitle": "LotSize",		"mData": "qty"}, 
+						{"sTitle": "Tester",		"mData": "testerid"}, 
+						{"sTitle": "Handler",		"mData": "handlerid"},
+						{"sTitle": "Device",		"mData": "deviceid"}, 
+						{"sTitle": "Package",		"mData": "packageid"}, 
+						{"sTitle": "Loadboard",	"mData": "loadboardid"}
+					];
+					//[ref] refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": reply['aaData'],
+							"aaSorting":[],
+							"iDisplayLength": 100													
+					});		
+					$('#handler').text(reply['lotinfo']['handlerid']);
+					$('#handler').show();
+					$('#ttResult').show();
+				}
 
-					if(params['type'] == 'deviceid')
-					{
-						var columns = [
-							{"sTitle": "Testerid",	"mData": "testerid"}, 
-							{"sTitle": "From",		"mData": "startDt"}, 
-							{"sTitle": "To",		"mData": "endDt"}, 
-							{"sTitle": "Quantity",	"mData": "qty"}
-						];
-						//[ref] refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": reply['aaData'],
-										"aaSorting":[],
-										"iDisplayLength": 100
-						});		
-						$('#dev').text(reply['lotinfo']['deviceid']);
-						$('#dev').show();
-						$('#ttResult').show();
-					}
+				if(params['type'] == 'deviceid')
+				{
+					var columns = [
+						{"sTitle": "Testerid",	"mData": "testerid"}, 
+						{"sTitle": "From",		"mData": "startDt"}, 
+						{"sTitle": "To",		"mData": "endDt"}, 
+						{"sTitle": "Quantity",	"mData": "qty"}
+					];
+					//[ref] refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": reply['aaData'],
+							"aaSorting":[],
+							"iDisplayLength": 100
+					});		
+					$('#dev').text(reply['lotinfo']['deviceid']);
+					$('#dev').show();
+					$('#ttResult').show();
+				}
 
-					if(params['type'] == 'factory')
-					{
-						var columns = [
-							{"sTitle": "Testerid",		"mData": "testername"},
-							{"sTitle": "Handlerid",		"mData": "handlerid"}, 
-							{"sTitle": "packageid",		"mData": "packageid"},  
-							{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
-							{"sTitle": "Status",		"mData": "category"}
-						];
-						//[ref] refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": reply['aaData'],
-										"iDisplayLength": 100,
-										"bAutoWidth": false
-						});		
-						$('#factory').text(params['value']);
-						$('#factory').show();
-						$('#ttResult').show();
-					}
+				if(params['type'] == 'factory')
+				{
+					var columns = [
+						{"sTitle": "Testerid",		"mData": "testername"},
+						{"sTitle": "Handlerid",		"mData": "handlerid"}, 
+						{"sTitle": "packageid",		"mData": "packageid"},  
+						{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
+						{"sTitle": "Status",		"mData": "category"}
+					];
+					//[ref] refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": reply['aaData'],
+							"iDisplayLength": 100,
+							"bAutoWidth": false
+					});		
+					$('#factory').text(params['value']);
+					$('#factory').show();
+					$('#ttResult').show();
+				}
 
-					if(params['type'] == 'OEE')
-					{
-						hideInfoButtonGroup();
+				if(params['type'] == 'OEE')
+				{
+					hideInfoButtonGroup();
 
-						//plot the chart
-						var svgW = 700;
-						var svgH = 320;
+					//plot the chart
+					var svgW = 700;
+					var svgH = 320;
 
-						var svg_total = dimple.newSvg("#ChartTab1", svgW, svgH);
-						plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "TOTAL", svg_total, "Down time distribution overall", "Percentage");
-						$('#ChartTab1').appendTo("#OEE_total");
+					var svg_total = dimple.newSvg("#ChartTab1", svgW, svgH);
+					plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "TOTAL", svg_total, "Down time distribution overall", "Percentage");
+					$('#ChartTab1').appendTo("#OEE_total");
 
-						var svg_xoee_line = dimple.newSvg("#ChartTab2", svgW, svgH);
-						plotXOEELineChart_by_Dimple(reply['forGraph'], "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
-						$('#ChartTab2').appendTo("#OEE_weekly");
+					var svg_xoee_line = dimple.newSvg("#ChartTab2", svgW, svgH);
+					plotXOEELineChart_by_Dimple(reply['forGraph'], "TOTAL", svg_xoee_line, "Weekly xOEE%", "xOEE%");
+					$('#ChartTab2').appendTo("#OEE_weekly");
 
-						var svg_93k = dimple.newSvg("#ChartTab3", svgW, svgH);
-						plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "93K", svg_93k, "Down time [A93K]", "Percentage");
-						$('#ChartTab3').appendTo("#OEE_93k");
-						
-						var svg_t2k = dimple.newSvg("#ChartTab4", svgW, svgH);
-						plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
-						$('#ChartTab4').appendTo("#OEE_t2k");
+					var svg_93k = dimple.newSvg("#ChartTab3", svgW, svgH);
+					plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "93K", svg_93k, "Down time [A93K]", "Percentage");
+					$('#ChartTab3').appendTo("#OEE_93k");
+					
+					var svg_t2k = dimple.newSvg("#ChartTab4", svgW, svgH);
+					plotTimeSlotBarChart_by_Dimple(reply['forGraph'], "T2K", svg_t2k, "Down time [T2K]", "Percentage");
+					$('#ChartTab4').appendTo("#OEE_t2k");
 
-						$('#tabs').append('<div id="ChartTab1">');
-						$('#tabs').append('<div id="ChartTab2">');
-						$('#tabs').append('<div id="ChartTab3">');
-						$('#tabs').append('<div id="ChartTab4">');
+					$('#tabs').append('<div id="ChartTab1">');
+					$('#tabs').append('<div id="ChartTab2">');
+					$('#tabs').append('<div id="ChartTab3">');
+					$('#tabs').append('<div id="ChartTab4">');
 
 
-						$('#OEE_93k').show();
-						$('#OEE_t2k').show();
-						$('#OEE_total').show();
-						$('#OEE_weekly').show();
-						$($("#tabs").find("li")[1]).show();
-						$($("#tabs").find('#Graph')).show();
+					$('#OEE_93k').show();
+					$('#OEE_t2k').show();
+					$('#OEE_total').show();
+					$('#OEE_weekly').show();
+					$($("#tabs").find("li")[1]).show();
+					$($("#tabs").find('#Graph')).show();
 
-						//plot the table
-						var tableContent = JSON.parse(reply['forTable']);
-						var columns = [
-							{"sTitle": "Week",		"mData": "ww"},
-							{"sTitle": "Tester",	"mData": "platform"},
-							{"sTitle": "EarnH",		"mData": "earnhour"},
-							{"sTitle": "RT",		"mData": "rthour"}, 
-							{"sTitle": "Verify",	"mData": "verifyhour"},  
-							{"sTitle": "QCE",		"mData": "qcehour"},  
-							{"sTitle": "Setup",		"mData": "setup"},
-							{"sTitle": "Down",		"mData": "down"},
-							{"sTitle": "PM",		"mData": "pm"},
-							{"sTitle": "Others",	"mData": "others"},
-							{"sTitle": "MTE",		"mData": "mte"},
-							{"sTitle": "PTE",		"mData": "pte"},
-							{"sTitle": "IDLE",		"mData": "idle"},
-							{"sTitle": "Shutdown",	"mData": "shutdown"},
-							{"sTitle": "Unknown",	"mData": "unknown"},
-							{"sTitle": "xOEE",		"mData": "xoee"}
-						];
-						//[ref] refer to table property: http://legacy.datatables.net/ref
-						var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-										"destroy":true,
-										"aoColumns": columns,
-										"aaData": tableContent,
-										"iDisplayLength": 100,
-										"bAutoWidth": false
-						});	
-						$('#ttResult').show();
-					}
+					//plot the table
+					var tableContent = JSON.parse(reply['forTable']);
+					var columns = [
+						{"sTitle": "Week",		"mData": "ww"},
+						{"sTitle": "Tester",	"mData": "platform"},
+						{"sTitle": "EarnH",		"mData": "earnhour"},
+						{"sTitle": "RT",		"mData": "rthour"}, 
+						{"sTitle": "Verify",	"mData": "verifyhour"},  
+						{"sTitle": "QCE",		"mData": "qcehour"},  
+						{"sTitle": "Setup",		"mData": "setup"},
+						{"sTitle": "Down",		"mData": "down"},
+						{"sTitle": "PM",		"mData": "pm"},
+						{"sTitle": "Others",	"mData": "others"},
+						{"sTitle": "MTE",		"mData": "mte"},
+						{"sTitle": "PTE",		"mData": "pte"},
+						{"sTitle": "IDLE",		"mData": "idle"},
+						{"sTitle": "Shutdown",	"mData": "shutdown"},
+						{"sTitle": "Unknown",	"mData": "unknown"},
+						{"sTitle": "xOEE",		"mData": "xoee"}
+					];
+					//[ref] refer to table property: http://legacy.datatables.net/ref
+					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
+							"destroy":true,
+							"aoColumns": columns,
+							"aaData": tableContent,
+							"iDisplayLength": 100,
+							"bAutoWidth": false
+					});	
+					$('#ttResult').show();
+				}
 			},
 			error: function(response) { // if error occured
 				console.log('error: ' + JSON.stringify(response));
 			}
 		});
-	});		
-
+	});
 });
 
 function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
 	dataSource = JSON.parse(dataSource);
 	var data = jQuery.grep(dataSource, function( n, i ) {
-		return		((n.platform.toUpperCase()==platform) 
-						&& (n.category.toUpperCase()!=="MTE") 
-						&& (n.category.toUpperCase()!=="PTE")
-						&& (n.category.toUpperCase()!=="IDLE")
-						&& (n.category.toUpperCase()!=="MFGHOUR")
-						&& (n.category.toUpperCase()!=="XOEE")
-					);
+		return	((n.platform.toUpperCase()==platform) 
+				&& (n.category.toUpperCase()!=="MTE") 
+				&& (n.category.toUpperCase()!=="PTE")
+				&& (n.category.toUpperCase()!=="IDLE")
+				&& (n.category.toUpperCase()!=="MFGHOUR")
+				&& (n.category.toUpperCase()!=="XOEE")
+			);
 	});
 
 	var c = new dimple.chart(svg, data);
