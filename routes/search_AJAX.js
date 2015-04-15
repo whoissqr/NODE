@@ -97,7 +97,7 @@ function getDataFromLotID(sqlstr, cb) {
 				if(rows.length==0) {
 						cb(null);
 				}
-				var aaData = new Array();
+				var aaData = [];
 				
 				for (var i = 0; i < rows.length; i++) {
 
@@ -159,7 +159,7 @@ function getDataFromTesterID(sqlstr, cb) {
 				if(rows.length==0) {
 						cb(null);
 				}
-				var aaData = new Array();
+				var aaData = [];
 				
 				for (var i = 0; i < rows.length; i++) {
 					var rowArray = {};					
@@ -209,7 +209,7 @@ function getDataFromHandlerID(sqlstr, cb) {
 				if(rows.length==0) {
 						cb(null);
 				}
-				var aaData = new Array();
+				var aaData = [];
 				
 				for (var i = 0; i < rows.length; i++) {
 					var rowArray = {};					
@@ -250,7 +250,7 @@ function getDataFromDeviceID(sqlstr, cb) {
 				if(rows.length==0) {
 						cb(null);
 				}
-				var aaData = new Array();
+				var aaData = [];
 				
 				for (var i = 0; i < rows.length; i++) {
 					var rowArray = {};
@@ -280,7 +280,7 @@ function getDataFromDeviceID(sqlstr, cb) {
 function getDataFromFactory(testers, cb) {
 		var data = {};
 		testers.sort();
-		lastE10stateArray = new Array(); //to clear array upon page refresh
+		lastE10stateArray = []; //to clear array upon page refresh
 		async.each(testers, getLastE10Status, function(err) {
 			if (err) return console.error(err);	   
 			data['aaData'] = lastE10stateArray;	
@@ -359,7 +359,7 @@ function getOEEData(osat, cb){
 				});
 }
 
-var lastE10stateArray = new Array();
+var lastE10stateArray = [];
 
 var getLastE10Status = function(testerid, cb) { // called once for each project row	    
 				query.connectionParameters = config.mprsConnStr;

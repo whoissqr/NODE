@@ -1,4 +1,4 @@
-var factoryArray = new Array();
+var factoryArray = [];
 
 factoryArray.push('XAP');
 factoryArray.push('KYEC');
@@ -125,7 +125,7 @@ $(document).ready(function() {
 });
 
 function getTesterFromFactory(factory){
-	var factoryTestersArray = new Array();
+	var factoryTestersArray = [];
 	var factoryKey;
 	switch(factory.toUpperCase()){
 		case 'XAP':   factoryKey = 'XAP'; break;

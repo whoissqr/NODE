@@ -16,10 +16,10 @@ var dateStr = ThirtyDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
 router.get('/search', function(req, res) {
 			queryMPRS.connectionParameters = config.mprsConnStr;      //connecting to localhost
 			//queryRpt.connectionParameters = config.reportConnStr;
-			var recentLotArray = new Array();
-			var testerArray = new Array();
-			var handlerArray = new Array();
-			var deviceArray = new Array();
+			var recentLotArray = [];
+			var testerArray = [];
+			var handlerArray = [];
+			var deviceArray = [];
 
 			async.parallel([ 
 				function(callback) {						
