@@ -28,8 +28,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-					 test.push(v.substr(i,v.length));
-					 i++;
+						test.push(v.substr(i,v.length));
+						i++;
 					}
 				})
 				return test;
@@ -44,8 +44,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-					 test.push(v.substr(i,v.length));
-					 i++;
+						test.push(v.substr(i,v.length));
+						i++;
 					}
 				})
 				return test;
@@ -60,8 +60,8 @@ $(document).ready(function() {
 				$.each(test,function(k,v){
 					i = 0;
 					while( (i+1) < v.length ){
-					 test.push(v.substr(i,v.length));
-					 i++;
+						test.push(v.substr(i,v.length));
+						i++;
 					}
 				})
 				return test;
@@ -69,13 +69,13 @@ $(document).ready(function() {
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
 			local: $.map(deviceArray, function(state) { return { value: state }; })
 		});
-		 
+
 		houndLotID.initialize();
 		houndTesterID.initialize();
 		houndHandlerID.initialize();
 		houndDeviceID.initialize();
 		houndFactory.initialize();
-		 
+
 		$('#custom-templates .typeahead').typeahead({
 			hint: false,
 			highlight: true,
@@ -125,22 +125,22 @@ $(document).ready(function() {
 });
 
 function getTesterFromFactory(factory){
-		var factoryTestersArray = new Array();
-		var factoryKey;
-		switch(factory.toUpperCase()){
-			case 'XAP':   factoryKey = 'XAP'; break;
-			case 'KYEC':  factoryKey = 'KYEC'; break;
-			case 'SPIL':  factoryKey = 'T'; break; 
-			case 'ATK':   factoryKey = 'K3'; break;
-		}
-		for(tester of testerArray)
+	var factoryTestersArray = new Array();
+	var factoryKey;
+	switch(factory.toUpperCase()){
+		case 'XAP':   factoryKey = 'XAP'; break;
+		case 'KYEC':  factoryKey = 'KYEC'; break;
+		case 'SPIL':  factoryKey = 'T'; break; 
+		case 'ATK':   factoryKey = 'K3'; break;
+	}
+	for(tester of testerArray)
+	{
+		if(tester.toUpperCase().indexOf(factoryKey)==0)
 		{
-			if(tester.toUpperCase().indexOf(factoryKey)==0)
-			{
-				factoryTestersArray.push(tester);
-			}
+			factoryTestersArray.push(tester);
 		}
-		return factoryTestersArray;
+	}
+	return factoryTestersArray;
 }
 
 var today = new Date(2015, 2, 26);	//March 26, //month is zero based
@@ -151,84 +151,84 @@ var endDate = today;
 	 lastW will be 7 days from Now; 
 	 lastM will be 30 days from Now;
 	 period selction is 7AM on startDate to 7AM on endDate.
-*/
-function getSearchPeriod(){
-	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
+	 */
+	 function getSearchPeriod(){
+	 	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
 
-	var selectedValue = $('input[name=timeBtnGrp]:checked').val();
-	
-	if(selectedValue=='lastW') 
-	{
-		startDate = new Date(today -  1000 * 60 * 60 * 24 * 7);
-		endDate = today;
-		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
-		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
-	}
-	else if(selectedValue=='lastM') 
-	{
-		startDate = new Date(today -  1000 * 60 * 60 * 24 * 30);
-		endDate = today;
-		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
-		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
-	}
-	else
-	{
-		startDate = $('#startDT').datepicker( "getDate" );
-		endDate = $('#endDT').datepicker( "getDate" );
+	 	var selectedValue = $('input[name=timeBtnGrp]:checked').val();
 
-		if(startDate==null){
-			$('#msgArea').val('Please select start date.');
-			return false;
-		}
-		
-		if(endDate==null){
-			$('#msgArea').val('Please select end date.');
-			return false;
-		}
+	 	if(selectedValue=='lastW') 
+	 	{
+	 		startDate = new Date(today -  1000 * 60 * 60 * 24 * 7);
+	 		endDate = today;
+	 		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
+	 		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
+	 	}
+	 	else if(selectedValue=='lastM') 
+	 	{
+	 		startDate = new Date(today -  1000 * 60 * 60 * 24 * 30);
+	 		endDate = today;
+	 		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60);
+	 		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60);
+	 	}
+	 	else
+	 	{
+	 		startDate = $('#startDT').datepicker( "getDate" );
+	 		endDate = $('#endDT').datepicker( "getDate" );
 
-		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
-		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
-	
-		if(!validateDatePicked()) return false;
-	}
+	 		if(startDate==null){
+	 			$('#msgArea').val('Please select start date.');
+	 			return false;
+	 		}
 
-	startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
-	endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
-	console.log(startDate + ' --- ' + endDate);
+	 		if(endDate==null){
+	 			$('#msgArea').val('Please select end date.');
+	 			return false;
+	 		}
 
-	return true;
-}
+	 		startDate = new Date(startDate - startDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
+	 		endDate = new Date(endDate - endDate.getTimezoneOffset()*1000 * 60 + 1000 * 60 * 60 * 7);
 
-function resetTimeBtnGroup(){
-	$('input[name=timeBtnGrp]').prop('checked', false);
-	$('#startDT').datepicker( "setDate", null);
-	$('#endDT').datepicker( "setDate", null);
-}
+	 		if(!validateDatePicked()) return false;
+	 	}
 
-function validateDatePicked(){
-	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
+	 	startDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
+	 	endDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
+	 	console.log(startDate + ' --- ' + endDate);
 
-	if(startDate > today) {
-		$('#msgArea').val('[' + startDate.toDateString() + '] is a future date.');
-		return false;
-	}
+	 	return true;
+	 }
 
-	if(startDate >= endDate){
-		$('#msgArea').val('Error: Start date [' + startDate.toDateString() + '] is earlier than End date [' + endDate.toDateString() + '].');
-		return false;
-	}
+	 function resetTimeBtnGroup(){
+	 	$('input[name=timeBtnGrp]').prop('checked', false);
+	 	$('#startDT').datepicker( "setDate", null);
+	 	$('#endDT').datepicker( "setDate", null);
+	 }
 
-	var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-	if(diffDays>60){
-		$('#msgArea').val('Error: Date range must be less than 60 days.');
-		return false;
-	}
+	 function validateDatePicked(){
+	 	if(!$('input[name=timeBtnGrp]').is(':checked'))	{ return true; }
 
-	return true;
-}
+	 	if(startDate > today) {
+	 		$('#msgArea').val('[' + startDate.toDateString() + '] is a future date.');
+	 		return false;
+	 	}
 
-$(function() {
+	 	if(startDate >= endDate){
+	 		$('#msgArea').val('Error: Start date [' + startDate.toDateString() + '] is earlier than End date [' + endDate.toDateString() + '].');
+	 		return false;
+	 	}
+
+	 	var timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
+	 	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	 	if(diffDays>60){
+	 		$('#msgArea').val('Error: Date range must be less than 60 days.');
+	 		return false;
+	 	}
+
+	 	return true;
+	 }
+
+	 $(function() {
 	//--- action handler for date time selection button group ---
 	$('input[name=timeBtnGrp]').click(function(e){			
 		var selectedValue = $('input[name=timeBtnGrp]:checked').val();
@@ -313,7 +313,7 @@ $(function() {
 			else if(insplit[1] =='OEE') params['factory'] = insplit[0].toUpperCase();
 			else {}
 
-			console.log('type = ' + params['type']);
+				console.log('type = ' + params['type']);
 			console.log('factory = ' + params['factory']);
 			resetTimeBtnGroup();
 		}
@@ -352,24 +352,24 @@ $(function() {
 				if(params['type'] == 'lotid')
 				{
 					var columns = [
-						{"sTitle": "Lotstartdt",	"mData": "lotstartdt"}, 
-						{"sTitle": "FTC",			"mData": "ftc"}, 
-						{"sTitle": "Tester",		"mData": "testerid"}, 
-						{"sTitle": "Handler",		"mData": "handlerid"}, 
-						{"sTitle": "LotSize",		"mData": "xamsqty"}, 
-						{"sTitle": "Testprogname",	"mData": "testprogname"}, 
-						{"sTitle": "Testgroup",	  	"mData": "testgroup"}, 
-						{"sTitle": "Speed",			"mData": "speedgrade"}, 
-						{"sTitle": "Temperature",	"mData": "temperature"},  
-						{"sTitle": "Loadboard",		"mData": "loadboardid"}
+					{"sTitle": "Lotstartdt",	"mData": "lotstartdt"}, 
+					{"sTitle": "FTC",			"mData": "ftc"}, 
+					{"sTitle": "Tester",		"mData": "testerid"}, 
+					{"sTitle": "Handler",		"mData": "handlerid"}, 
+					{"sTitle": "LotSize",		"mData": "xamsqty"}, 
+					{"sTitle": "Testprogname",	"mData": "testprogname"}, 
+					{"sTitle": "Testgroup",	  	"mData": "testgroup"}, 
+					{"sTitle": "Speed",			"mData": "speedgrade"}, 
+					{"sTitle": "Temperature",	"mData": "temperature"},  
+					{"sTitle": "Loadboard",		"mData": "loadboardid"}
 					];
 					//refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": reply['aaData'],
-							"aaSorting":[],
-							"iDisplayLength": 100													
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": reply['aaData'],
+						"aaSorting":[],
+						"iDisplayLength": 100													
 					});		
 					$('#lotid').text(reply['lotinfo']['lotid']);
 					$('#grade').text(reply['lotinfo']['testgrade']);
@@ -387,22 +387,22 @@ $(function() {
 				if(params['type'] == 'testerid')
 				{
 					var columns = [
-						{"sTitle": "Date",			"mData": "lotstartdt"}, 
-						{"sTitle": "FTC",			"mData": "ftc"}, 
-						{"sTitle": "LotID",			"mData": "lotid"}, 
-						{"sTitle": "Device",		"mData": "deviceid"}, 
-						{"sTitle": "Package",		"mData": "packageid"},
-						{"sTitle": "Tester",		"mData": "testerid"},  
-						{"sTitle": "Handler",		"mData": "handlerid"}, 
-						{"sTitle": "loadboard",		"mData": "loadboardid"}
+					{"sTitle": "Date",			"mData": "lotstartdt"}, 
+					{"sTitle": "FTC",			"mData": "ftc"}, 
+					{"sTitle": "LotID",			"mData": "lotid"}, 
+					{"sTitle": "Device",		"mData": "deviceid"}, 
+					{"sTitle": "Package",		"mData": "packageid"},
+					{"sTitle": "Tester",		"mData": "testerid"},  
+					{"sTitle": "Handler",		"mData": "handlerid"}, 
+					{"sTitle": "loadboard",		"mData": "loadboardid"}
 					];
 					//[ref] refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": reply['aaData'],
-							"aaSorting":[],
-							"iDisplayLength": 100
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": reply['aaData'],
+						"aaSorting":[],
+						"iDisplayLength": 100
 					});		
 					$('#factory').text(reply['lotinfo']['factory']);
 					$('#tester').text(reply['lotinfo']['testerid']);
@@ -415,22 +415,22 @@ $(function() {
 				if(params['type'] == 'handlerid')
 				{
 					var columns = [
-						{"sTitle": "Date",			"mData": "lotstartdt"}, 
-						{"sTitle": "LotID",			"mData": "lotid"},
-						{"sTitle": "LotSize",		"mData": "qty"}, 
-						{"sTitle": "Tester",		"mData": "testerid"}, 
-						{"sTitle": "Handler",		"mData": "handlerid"},
-						{"sTitle": "Device",		"mData": "deviceid"}, 
-						{"sTitle": "Package",		"mData": "packageid"}, 
-						{"sTitle": "Loadboard",	"mData": "loadboardid"}
+					{"sTitle": "Date",			"mData": "lotstartdt"}, 
+					{"sTitle": "LotID",			"mData": "lotid"},
+					{"sTitle": "LotSize",		"mData": "qty"}, 
+					{"sTitle": "Tester",		"mData": "testerid"}, 
+					{"sTitle": "Handler",		"mData": "handlerid"},
+					{"sTitle": "Device",		"mData": "deviceid"}, 
+					{"sTitle": "Package",		"mData": "packageid"}, 
+					{"sTitle": "Loadboard",	"mData": "loadboardid"}
 					];
 					//[ref] refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": reply['aaData'],
-							"aaSorting":[],
-							"iDisplayLength": 100													
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": reply['aaData'],
+						"aaSorting":[],
+						"iDisplayLength": 100													
 					});		
 					$('#handler').text(reply['lotinfo']['handlerid']);
 					$('#handler').show();
@@ -440,18 +440,18 @@ $(function() {
 				if(params['type'] == 'deviceid')
 				{
 					var columns = [
-						{"sTitle": "Testerid",	"mData": "testerid"}, 
-						{"sTitle": "From",		"mData": "startDt"}, 
-						{"sTitle": "To",		"mData": "endDt"}, 
-						{"sTitle": "Quantity",	"mData": "qty"}
+					{"sTitle": "Testerid",	"mData": "testerid"}, 
+					{"sTitle": "From",		"mData": "startDt"}, 
+					{"sTitle": "To",		"mData": "endDt"}, 
+					{"sTitle": "Quantity",	"mData": "qty"}
 					];
 					//[ref] refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": reply['aaData'],
-							"aaSorting":[],
-							"iDisplayLength": 100
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": reply['aaData'],
+						"aaSorting":[],
+						"iDisplayLength": 100
 					});		
 					$('#dev').text(reply['lotinfo']['deviceid']);
 					$('#dev').show();
@@ -461,19 +461,19 @@ $(function() {
 				if(params['type'] == 'factory')
 				{
 					var columns = [
-						{"sTitle": "Testerid",		"mData": "testername"},
-						{"sTitle": "Handlerid",		"mData": "handlerid"}, 
-						{"sTitle": "packageid",		"mData": "packageid"},  
-						{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
-						{"sTitle": "Status",		"mData": "category"}
+					{"sTitle": "Testerid",		"mData": "testername"},
+					{"sTitle": "Handlerid",		"mData": "handlerid"}, 
+					{"sTitle": "packageid",		"mData": "packageid"},  
+					{"sTitle": "Loadboardid",	"mData": "loadboardid"},  
+					{"sTitle": "Status",		"mData": "category"}
 					];
 					//[ref] refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": reply['aaData'],
-							"iDisplayLength": 100,
-							"bAutoWidth": false
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": reply['aaData'],
+						"iDisplayLength": 100,
+						"bAutoWidth": false
 					});		
 					$('#factory').text(params['value']);
 					$('#factory').show();
@@ -520,30 +520,30 @@ $(function() {
 					//plot the table
 					var tableContent = JSON.parse(reply['forTable']);
 					var columns = [
-						{"sTitle": "Week",		"mData": "ww"},
-						{"sTitle": "Tester",	"mData": "platform"},
-						{"sTitle": "EarnH",		"mData": "earnhour"},
-						{"sTitle": "RT",		"mData": "rthour"}, 
-						{"sTitle": "Verify",	"mData": "verifyhour"},  
-						{"sTitle": "QCE",		"mData": "qcehour"},  
-						{"sTitle": "Setup",		"mData": "setup"},
-						{"sTitle": "Down",		"mData": "down"},
-						{"sTitle": "PM",		"mData": "pm"},
-						{"sTitle": "Others",	"mData": "others"},
-						{"sTitle": "MTE",		"mData": "mte"},
-						{"sTitle": "PTE",		"mData": "pte"},
-						{"sTitle": "IDLE",		"mData": "idle"},
-						{"sTitle": "Shutdown",	"mData": "shutdown"},
-						{"sTitle": "Unknown",	"mData": "unknown"},
-						{"sTitle": "xOEE",		"mData": "xoee"}
+					{"sTitle": "Week",		"mData": "ww"},
+					{"sTitle": "Tester",	"mData": "platform"},
+					{"sTitle": "EarnH",		"mData": "earnhour"},
+					{"sTitle": "RT",		"mData": "rthour"}, 
+					{"sTitle": "Verify",	"mData": "verifyhour"},  
+					{"sTitle": "QCE",		"mData": "qcehour"},  
+					{"sTitle": "Setup",		"mData": "setup"},
+					{"sTitle": "Down",		"mData": "down"},
+					{"sTitle": "PM",		"mData": "pm"},
+					{"sTitle": "Others",	"mData": "others"},
+					{"sTitle": "MTE",		"mData": "mte"},
+					{"sTitle": "PTE",		"mData": "pte"},
+					{"sTitle": "IDLE",		"mData": "idle"},
+					{"sTitle": "Shutdown",	"mData": "shutdown"},
+					{"sTitle": "Unknown",	"mData": "unknown"},
+					{"sTitle": "xOEE",		"mData": "xoee"}
 					];
 					//[ref] refer to table property: http://legacy.datatables.net/ref
 					var otable = $('#ttResult').html('<table class="display"></table>').children('table').dataTable({
-							"destroy":true,
-							"aoColumns": columns,
-							"aaData": tableContent,
-							"iDisplayLength": 100,
-							"bAutoWidth": false
+						"destroy":true,
+						"aoColumns": columns,
+						"aaData": tableContent,
+						"iDisplayLength": 100,
+						"bAutoWidth": false
 					});	
 					$('#ttResult').show();
 				}
@@ -552,18 +552,18 @@ $(function() {
 				console.log('error: ' + JSON.stringify(response));
 			}
 		});
-	});
+});
 });
 
 function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
 	dataSource = JSON.parse(dataSource);
 	var data = jQuery.grep(dataSource, function( n, i ) {
 		return	((n.platform.toUpperCase()==platform) 
-				&& (n.category.toUpperCase()!=="MTE") 
-				&& (n.category.toUpperCase()!=="PTE")
-				&& (n.category.toUpperCase()!=="IDLE")
-				&& (n.category.toUpperCase()!=="MFGHOUR")
-				&& (n.category.toUpperCase()!=="XOEE")
+			&& (n.category.toUpperCase()!=="MTE") 
+			&& (n.category.toUpperCase()!=="PTE")
+			&& (n.category.toUpperCase()!=="IDLE")
+			&& (n.category.toUpperCase()!=="MFGHOUR")
+			&& (n.category.toUpperCase()!=="XOEE")
 			);
 	});
 
@@ -583,12 +583,12 @@ function plotTimeSlotBarChart_by_Dimple(dataSource, platform, svg, chartTitle, y
 	clegend.shapes.selectAll("text").attr("dy", "8");  
 
 	svg.append("text")
-		 .attr("x", c._xPixels() + c._widthPixels() / 2)
-		 .attr("y", c._yPixels() - 20)
-		 .style("text-anchor", "middle")
-		 .style("font-family", "sans-serif")
-		 .style("font-weight", "bold")
-		 .text(chartTitle);
+	.attr("x", c._xPixels() + c._widthPixels() / 2)
+	.attr("y", c._yPixels() - 20)
+	.style("text-anchor", "middle")
+	.style("font-family", "sans-serif")
+	.style("font-weight", "bold")
+	.text(chartTitle);
 }
 
 function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytitle){
@@ -612,12 +612,12 @@ function plotXOEELineChart_by_Dimple(dataSource, platform, svg, chartTitle, ytit
 	clegend.shapes.selectAll("text").attr("dy", "8"); 
 
 	svg.append("text")
-		 .attr("x", c._xPixels() + c._widthPixels() / 2)
-		 .attr("y", c._yPixels() - 20)
-		 .style("text-anchor", "middle")
-		 .style("font-family", "sans-serif")
-		 .style("font-weight", "bold")
-		 .text(chartTitle);
+	.attr("x", c._xPixels() + c._widthPixels() / 2)
+	.attr("y", c._yPixels() - 20)
+	.style("text-anchor", "middle")
+	.style("font-family", "sans-serif")
+	.style("font-weight", "bold")
+	.text(chartTitle);
 }
 
 function hideInfoButtonGroup(){
@@ -679,9 +679,9 @@ function initPage(){
 
 
 	if ( (recentLotArray.length==0)	||
-		 (deviceArray.length==0)	||
-		 (handlerArray.length==0)	||
-		 (testerArray.length==0) 	)
+		(deviceArray.length==0)	||
+		(handlerArray.length==0)	||
+		(testerArray.length==0) 	)
 	{
 		$('#msgArea').val('Database connection error.');
 	}
