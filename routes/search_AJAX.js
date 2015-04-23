@@ -32,6 +32,7 @@ router.get('/universalQuery', function(req, res) {
 						var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
 						sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
 						getDataFromLotID(sqlstr, function(d) {
+							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
 						break;
@@ -43,6 +44,7 @@ router.get('/universalQuery', function(req, res) {
 						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
 						sqlstr += ' group by ftc, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) ASC';
 						getDataFromTesterID(sqlstr, function(d) {
+							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
 						break;
@@ -54,6 +56,7 @@ router.get('/universalQuery', function(req, res) {
 						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
 						sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt) DESC';
 						getDataFromHandlerID(sqlstr, function(d) {
+							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
 						break;
@@ -62,24 +65,28 @@ router.get('/universalQuery', function(req, res) {
 						var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
 						sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
 						sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
-						getDataFromDeviceID(sqlstr, function(d) {					
+						getDataFromDeviceID(sqlstr, function(d) {	
+							res.header('Access-Control-Allow-Origin', '*');				
 							res.json(d);
 						});
 						break;
 
 			 case 'factory':
 						getDataFromFactory(params['testers'], function(d) {
+							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
 						break;
 			 case 'OEE':
 						var osat = params['factory'];			
 						getOEEData(osat, function(d) {
+							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
 						break;
 			 case 'error':
 						log.warn('Unrecognized user input: ' + params['value']);
+						res.header('Access-Control-Allow-Origin', '*');
 						res.json(null);
 						break;
 	}
@@ -87,9 +94,10 @@ router.get('/universalQuery', function(req, res) {
 });
 
 function getDataFromLotID(sqlstr, cb) {
-		console.log(sqlstr);
+		console.log('[run SQL] ' + sqlstr + '\n');
 		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
+				if(err) console.log('[[error]] query using lotid: ' + err);
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
 				var data = {};
@@ -149,9 +157,10 @@ function getDataFromLotID(sqlstr, cb) {
 }
 
 function getDataFromTesterID(sqlstr, cb) {
-		console.log(sqlstr);
+		console.log('[run SQL] ' + sqlstr + '\n');
 		query.connectionParameters = config.mprsConnStr;
 		query(sqlstr, function(err, rows, result) {
+				if(err) console.log('[[error]] query using testerid: ' + err);
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
 				var data = {};

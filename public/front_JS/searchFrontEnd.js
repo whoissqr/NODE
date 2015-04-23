@@ -338,7 +338,7 @@ var endDate = today;
 
 		
 		$.ajax({
-			url: 'universalQuery',	 //routed to index.js
+			url: 'universalQuery',	 //routed to search_AJAX.js
 			type: 'GET',
 			data: {jsonParams:JSON.stringify(params)},
 			contentType: 'application/json',
