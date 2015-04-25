@@ -128,7 +128,7 @@ $(function() {
                 $('#pkg').show();
             }
 ```
-Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
+Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [search_AJAX.js](https://github.com/whoissqr/NODE/blob/master/routes/search_AJAX.js).
 
 **Let's look at the AJAX request handler in [search_AJAX.js](https://github.com/whoissqr/NODE/blob/master/routes/search_AJAX.js)**, 
 ```JavaScript
