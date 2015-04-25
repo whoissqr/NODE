@@ -34,7 +34,7 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
   | [express](http://expressjs.com/)       | Fast, unopinionated, minimalist web framework for Node.js                                                               |
   | [pg-query](https://github.com/brianc/node-pg-query)      | database interface to PostgresSQL                                                                     |
   | [async](https://github.com/caolan/async)         | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript.  |
-  | [d3](http://d3js.org/)           | A JavaScript library for manipulating documents based on data.                                                                 |  
+  | [dimple](http://dimplejs.org/)           | An object-oriented API for business analytics powered by d3.                                                                |  
   | [lodash](https://lodash.com/)        | A utility library delivering consistency, customization, performance, & extras.                                            | 
   | [jquery](http://jquery.com/)        | A fast, small, and feature-rich JavaScript library.                                                                         | 
   | [node-windows](https://github.com/coreybutler/node-windows)  | A library which helps to wrap Node.js server in windows service form. | 
@@ -42,7 +42,7 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
   | [DataTables](http://www.datatables.net/) | DataTables is a plug-in for the jQuery Javascript library, which adds interaction control to any HTML table. |
   | [handlebars](http://handlebarsjs.com/) | Handlebars provides the power necessary to let you build semantic templates effectively with no frustration. |
   | [Datejs](http://www.datejs.com/) | Datejs is an open-source JavaScript Date Library. |
-  | [mocha](http://mochajs.org/) | Mocha is a feature-rich JavaScript test framework running on node.js and the browser, making asynchronous testing simple and fun. |
+  | [mocha](http://mochajs.org/) | Mocha is a feature-rich JavaScript test framework running on nodeAn object-oriented API for business analytics powered by d3..js and the browser, making asynchronous testing simple and fun. |
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 
