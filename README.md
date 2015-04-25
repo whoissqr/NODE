@@ -25,8 +25,10 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 
 ##Tools and setup
 
-1. NODE.js itself. 
+1. NODE.js itself.
+
 2. A good text editor -- I use Sublime myself; I mention this as you might need 'tab conscious' editor to work well with jade.
+
 3. Install misc Node.js open source modules using npm. Don't re-invent the wheels!
 
   | NODE libs  | description |
@@ -43,6 +45,7 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
   | [handlebars](http://handlebarsjs.com/) | Handlebars provides the power necessary to let you build semantic templates effectively with no frustration. |
   | [Datejs](http://www.datejs.com/) | Datejs is an open-source JavaScript Date Library. |
   | [mocha](http://mochajs.org/) | Mocha is a feature-rich JavaScript test framework running on nodeAn object-oriented API for business analytics powered by d3..js and the browser, making asynchronous testing simple and fun. |
+  
 4. A good debugger 
 	- The simplest one, google chrome. When you load a page in chrome tab, just right click and select 'Inspect element', and here you go.
 
