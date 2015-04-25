@@ -50,7 +50,7 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 
 Some basic understanding about Express folder structure is helpful. Over here, the most frequently accessed files and folders are 
 
-- app.json-- This is like an entry point to the code.
+- <b>app.json</b> -- This is like an entry point to the code.
 - routes  -- Well, this is where the page URL being routed to.
 - public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
 - views -- All those Jade files.
