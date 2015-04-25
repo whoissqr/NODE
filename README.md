@@ -1,21 +1,21 @@
 
-#A sample CRUD webpage using Node.js and TypeAhead
+#A Single-page application for simple CRUD using Node.js
 
-This is a rather straightforward Node.js project. It accepts user text input and connects to a PostgreSQL server to retrieve some database rows, and display the data in graphical (d3.js) or tabular (Datatables) form.
-
-##What does it do?
+This is a rather straightforward Node.js project. It accepts user input through web page and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays in chart (d3.js) and tabular (Datatables) form in browser.
 
 The project source code can be found here: [NODE](https://github.com/whoissqr/NODE)
 
-The page http://localhost:3000/search will show a text input box and a 'Submit' button upon page load.
+##What does it do?
+
+The page http://localhost:3000/search will present a search box and a 'Submit' button upon page load.
 
 ![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
 
-When user keys in few characters, the Twitter typeahead library will prompt user with multiple hints from a few different data sources based on string partial matching,
+User only need to key in few characters, the search box will pop up a number of hints based on string partial matching,
 
 ![typeahead](https://github.com/whoissqr/NODE/blob/master/pic/Typeahead_lot.jpg)
 
-When 'Submit' button is clicked, form data is sumbitted to backend Node.js and returned using AJAX and row data is presented in tabular forms (jquery.dataTables.min.js)
+When 'Submit' button is clicked, user input is sent back to AJAX (implemented using Node.js) and data is returned in JSON format and presented in tabular and chart form.
 
 ![Data shown in table](https://github.com/whoissqr/NODE/blob/master/pic/table.jpg)
 
@@ -25,9 +25,9 @@ When 'Submit' button is clicked, form data is sumbitted to backend Node.js and r
 
 ##Tools and setup
 
-1. NODES itself. 
-2. A good text editor -- I am using Sublime myself; I highlight this as you might need 'tab conscious' editor to work well with jade.
-3. Install misc Node.js open source libraries. Don't re-invent the wheels!
+1. NODE.js itself. 
+2. A good text editor -- I use Sublime myself; I mention this as you might need 'tab conscious' editor to work well with jade.
+3. Install misc Node.js open source modules using npm. Don't re-invent the wheels!
 
   | NODE libs  | description |
   | :------------ |:------------|
