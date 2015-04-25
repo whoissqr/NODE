@@ -50,22 +50,22 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 
 Some basic understanding about Express folder structure is helpful. Over here, the most frequently accessed files and folders are 
 
-- <b>app.json</b> -- This is like an entry point to the code.
-- <b>routes</b> -- Well, this is where the page URL being routed to.
-- <b>public</b> -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
+- <b>app.json</b> -- This file is like an entry point to the code.
+- <b>routes</b> -- Well, this folder is where the page URL being routed to.
+- <b>public</b> -- This folder contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
 - <b>views</b> -- All those Jade files.
-- <b>config.json</b> -- This is where I store my database login credentials.
-- <b>packge.json</b> -- This is where Express configures the back end JavaScript modules.
+- <b>config.json</b> -- This file is where I store my database login credentials.
+- <b>packge.json</b> -- This file is where Express configures the back end JavaScript modules.
 
 **Ok, let me start with the URL**, http://localhost:3000/search
 You will see these two lines of code somewhere in [app.js](https://github.com/whoissqr/NODE/blob/master/app.js):
 
 ```JavaScript
 var search = require('./routes/search');    //line 1
-app.use('/search', search);                 //line 2
+app.use('/', search);                       //line 29
 ```
 
-Line 2 here is matching URL with route, and line 1 is defining the file path [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js) for the route.
+Line 29 here is matching URL with route, and line 1 is defining the file path [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js) for the route.
 
 **Then let's open [routes/search.js](https://github.com/whoissqr/NODE/blob/master/routes/search.js)** to take a look, we will find the below code snippet
 
@@ -112,7 +112,7 @@ $(function() {
       else if($.isNumeric(userInput)) params['type'] = 'lotid';
 
       $.ajax({
-        url: 'universalQuery',   //routed to index.js
+        url: 'universalQuery',   //routed to search_AJAX.js
         type: 'GET',
         data: {jsonParams:JSON.stringify(params)},
         contentType: 'application/json',                  
@@ -130,7 +130,7 @@ $(function() {
 ```
 Overhere, we define a AJAX routine inside the button (#btn_search_query) handler. The text input is processed and stored in a JavaScript object (param[]) and forwarded to universalQuery in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js).
 
-**Let's look at the AJAX request handler in [index.js](https://github.com/whoissqr/NODE/blob/master/routes/index.js)**, 
+**Let's look at the AJAX request handler in [search_AJAX.js](https://github.com/whoissqr/NODE/blob/master/routes/search_AJAX.js)**, 
 ```JavaScript
 /* AJAX handler for universal query */
 router.get('/universalQuery', function(req, res) {
@@ -147,6 +147,7 @@ router.get('/universalQuery', function(req, res) {
             var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
             sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
             getDataFromLotID(sqlstr, function(d) {
+              res.header('Access-Control-Allow-Origin', '*');
               res.json(d);
             });
             break;
