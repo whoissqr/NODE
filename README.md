@@ -51,11 +51,11 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 Some basic understanding about Express folder structure is helpful. Over here, the most frequently accessed files and folders are 
 
 - <b>app.json</b> -- This is like an entry point to the code.
-- routes  -- Well, this is where the page URL being routed to.
-- public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
-- views -- All those Jade files.
-- config.json -- This is where I store my database login credentials.
-- packge.json -- This is where Express configures the back end JavaScript modules.
+- <b>routes</b> -- Well, this is where the page URL being routed to.
+- <b>public</b> -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
+- <b>views</b> -- All those Jade files.
+- <b>config.json</b> -- This is where I store my database login credentials.
+- <b>packge.json</b> -- This is where Express configures the back end JavaScript modules.
 
 **Ok, let me start with the URL**, http://localhost:3000/search
 You will see these two lines of code somewhere in [app.js](https://github.com/whoissqr/NODE/blob/master/app.js):
