@@ -1,7 +1,7 @@
 
 #A Single-page application for simple CRUD using Node.js
 
-This is a rather straightforward Node.js project. It accepts user input through web page and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays in chart (d3.js) and tabular (Datatables) form in browser.
+This is a rather straightforward Node.js project. It accepts user input through web page and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays data in chart (Dimple) and tabular (Datatables) form in browser.
 
 The project source code can be found here: [NODE](https://github.com/whoissqr/NODE)
 
@@ -11,7 +11,7 @@ The page http://localhost:3000/search will present a search box and a 'Submit' b
 
 ![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
 
-User only need to key in few characters, the search box will pop up a number of hints based on string partial matching,
+User only need to key in few characters, the search box will pop up a number of hints by matching this partial string with database retrieved information,
 
 ![typeahead](https://github.com/whoissqr/NODE/blob/master/pic/Typeahead_lot.jpg)
 
@@ -52,8 +52,7 @@ Some basic understanding about Express folder structure is helpful. Over here, t
 
 - app.json-- This is like an entry point to the code.
 - routes  -- Well, this is where the page URL being routed to.
-- public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with
-				public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)  	   
+- public  -- This contains all the front end resources. I created a subfolder called public/front_JS to store all my own JavaScript code to differentiate with public/javascripts folder which is created by Express by default and I used to store all the downloaded JavaScript libraries. (well, they could be put in CDNs instead, but the sake of intranet, err...)
 - views -- All those Jade files.
 - config.json -- This is where I store my database login credentials.
 - packge.json -- This is where Express configures the back end JavaScript modules.
