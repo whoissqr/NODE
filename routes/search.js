@@ -8,7 +8,7 @@ var url = require('url');
 var router = express.Router();
 var _=require('lodash');
 
-var today = new Date();
+var today = new Date(2015, 2, 26);	//March 26, //month is zero based
 var ThirtyDaysAgo = new Date(today -  1000 * 60 * 60 * 24 * 30); //Date is in millisecs;
 var dateStr = ThirtyDaysAgo.toISOString().slice(0, 19).replace('T', ' ');
 
