@@ -30,8 +30,8 @@ router.get('/universalQuery', function(req, res) {
 	switch(params['type']){
 			 case 'lotid':	
 						var sqlstr = 'select lotstartdt, ftc, lotid, deviceid, packageid, testprogname, testgrade, testgroup, temperature, testerid, handlerid, numofsite, masknum, soaktime, xamsqty, scd, speedgrade, loadboardid, checksum from lotintro';
-						sqlstr +=  ' where UPPER(lotid)=\'' + params['value'] + '\'  order by lotstartdt';  
-						getDataFromLotID(sqlstr, function(d) {
+						sqlstr +=  ' where UPPER(lotid)= $1 order by lotstartdt';  
+						getDataFromLotID(sqlstr, params['value'], function(d) {
 							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
@@ -39,11 +39,9 @@ router.get('/universalQuery', function(req, res) {
 
 			 case 'testerid': 
 						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, ftc, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro';
-						sqlstr += ' where UPPER(testerid) =\'' + params['value'] + '\'';
-						sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
-						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+						sqlstr += ' where UPPER(testerid) = $1 and lotstartdt> $2 and lotstartdt< $3';
 						sqlstr += ' group by ftc, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid order by min(lotstartdt) ASC';
-						getDataFromTesterID(sqlstr, function(d) {
+						getDataFromTesterID(sqlstr, params['value'], params['startDate'], params['endDate'], function(d) {
 							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
@@ -51,11 +49,11 @@ router.get('/universalQuery', function(req, res) {
 
 			case 'handlerid':
 						var sqlstr = 'SELECT min(lotstartdt) AS lotstart, lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid from lotintro';
-						sqlstr += ' where UPPER(handlerid) =\'' + params['value'] + '\''; 			
-						sqlstr += ' and lotstartdt>\'' + params['startDate'] + '\'';
-						sqlstr += ' and lotstartdt<\'' + params['endDate'] + '\'';
+						sqlstr += ' where UPPER(handlerid) = $1'; 			
+						sqlstr += ' and lotstartdt> $2';
+						sqlstr += ' and lotstartdt< $3';
 						sqlstr += ' group by lotid, xamsqty, handlerid, testerid, deviceid, packageid, masknum, loadboardid order by min(lotstartdt) DESC';
-						getDataFromHandlerID(sqlstr, function(d) {
+						getDataFromHandlerID(sqlstr, params['value'], params['startDate'], params['endDate'], function(d) {
 							res.header('Access-Control-Allow-Origin', '*');
 							res.json(d);
 						});
@@ -63,9 +61,9 @@ router.get('/universalQuery', function(req, res) {
 
 			 case 'deviceid':
 						var sqlstr = 'select distinct testerid, min(lotstartdt) AS startdt, max(lotstartdt) AS enddt, sum(xamsqty) as qty, deviceid from lotintro';
-						sqlstr += ' where UPPER(deviceid) =\'' + params['value'] + '\'';
+						sqlstr += ' where UPPER(deviceid) = $1';
 						sqlstr += ' group by testerid, deviceid order by  startdt, testerid, deviceid';
-						getDataFromDeviceID(sqlstr, function(d) {	
+						getDataFromDeviceID(sqlstr, params['value'], function(d) {	
 							res.header('Access-Control-Allow-Origin', '*');				
 							res.json(d);
 						});
@@ -93,10 +91,11 @@ router.get('/universalQuery', function(req, res) {
 	
 });
 
-function getDataFromLotID(sqlstr, cb) {
+function getDataFromLotID(sqlstr, lotid, cb) {
 		console.log('[run SQL] ' + sqlstr + '\n');
+		console.log('[with param] = ' + lotid + '\n');
 		query.connectionParameters = config.mprsConnStr;
-		query(sqlstr, function(err, rows, result) {
+		query(sqlstr, [lotid], function(err, rows, result) {
 				if(err) console.log('[[error]] query using lotid: ' + err);
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
@@ -156,13 +155,14 @@ function getDataFromLotID(sqlstr, cb) {
 		});
 }
 
-function getDataFromTesterID(sqlstr, cb) {
+function getDataFromTesterID(sqlstr, testerid, startD, endD, cb) {
 		console.log('[run SQL] ' + sqlstr + '\n');
+		console.log('[with param] = ' + testerid + startD + endD + '\n');
 		query.connectionParameters = config.mprsConnStr;
-		query(sqlstr, function(err, rows, result) {
+		query(sqlstr, [testerid, startD, endD], function(err, rows, result) {
 				if(err) console.log('[[error]] query using testerid: ' + err);
 				assert.equal(rows, result.rows);
-				console.log(rows.length + " rows returned.");
+				//console.log(rows.length + " rows returned.");
 				var data = {};
 				var lotinfo = {};
 				if(rows.length==0) {
@@ -207,10 +207,10 @@ function getDataFromTesterID(sqlstr, cb) {
 		});
 }
 
-function getDataFromHandlerID(sqlstr, cb) {
+function getDataFromHandlerID(sqlstr, handlerid, startD, endD, cb) {
 		console.log(sqlstr);
 		query.connectionParameters = config.mprsConnStr;
-		query(sqlstr, function(err, rows, result) {
+		query(sqlstr, [handlerid, startD, endD], function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
 				var data = {};
@@ -248,10 +248,10 @@ function getDataFromHandlerID(sqlstr, cb) {
 		});
 }
 
-function getDataFromDeviceID(sqlstr, cb) {
+function getDataFromDeviceID(sqlstr, deviceID, cb) {
 		console.log(sqlstr);
 		query.connectionParameters = config.mprsConnStr;
-		query(sqlstr, function(err, rows, result) {
+		query(sqlstr, [deviceID], function(err, rows, result) {
 				assert.equal(rows, result.rows);
 				console.log(rows.length + " rows returned.");
 				var data = {};
@@ -372,10 +372,10 @@ var lastE10stateArray = [];
 
 var getLastE10Status = function(testerid, cb) { // called once for each project row	    
 				query.connectionParameters = config.mprsConnStr;
-				query('SELECT * FROM e10state WHERE testerid=\''+testerid+'\' ORDER BY startdt DESC LIMIT 1', 
+				query('SELECT * FROM e10state WHERE testerid= $1 ORDER BY startdt DESC LIMIT 1', [testerid],
 					function(err, rows, result) {
 							if(err) return cb(err); // let Async know there was an error. Further processing will stop
-							console.log(rows.length + " rows returned.");
+							//console.log(rows.length + " rows returned.");
 							var lastE10state = {};
 							var startdt = new Date(rows[0].startdt);
 							var now = new Date();
@@ -405,11 +405,11 @@ var getLastE10Status = function(testerid, cb) { // called once for each project 
 							var sqlstr = 'SELECT lotstartdt, lotid, deviceid, packageid, handlerid, masknum, loadboardid, testerid from lotintro'
 									sqlstr += ' where testerid = \''+testerid+'\'';
 									sqlstr += ' order by lotstartdt DESC LIMIT 1';
-							console.log(sqlstr);
+							//console.log(sqlstr);
 							query(sqlstr, function(err, rows, result) {
 									if(err) return cb(err); // let Async know there was an error. Further processing will stop
 									assert.equal(rows, result.rows);
-									console.log(rows.length + " rows returned.");
+									//console.log(rows.length + " rows returned.");
 									lastE10state["deviceid"]  = rows[0].deviceid;
 									lastE10state["packageid"] = rows[0].packageid;
 									lastE10state["handlerid"] = rows[0].handlerid;
