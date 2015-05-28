@@ -4,8 +4,6 @@ This is a rather straightforward Node.js project. It accepts user input through 
 
 The project source code can be found here: [NODE](https://github.com/whoissqr/NODE)
 
-##What does it do?
-
 The page http://localhost:3000/search will present a search box and a 'Submit' button upon page load.
 
 ![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
@@ -22,20 +20,20 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 
 ![Data shown in chart](https://cloud.githubusercontent.com/assets/4846507/6773617/960009be-d14e-11e4-9985-7dd17944cc69.jpg)
 
-###Why NODEJS?<br>
+#####Why NODEJS?<br>
 https://github.com/whoissqr/NODE/wiki/Why-Nodejs%3F
 
-###Modules used and environment setup<br>
+#####Modules used and environment setup<br>
 https://github.com/whoissqr/NODE/wiki/working-environment-setup
 
-###Walk through the code<br>
+#####Walk through the code<br>
 https://github.com/whoissqr/NODE/wiki/A-Single-page-application-implementation-to-display-data-from-PostgreSQL-using-Node.js
 
-###How to run nested database queries in parallel?<br>
+#####How to run nested database queries in parallel?<br>
 https://github.com/whoissqr/NODE/wiki/note:-how-to-run-nested-database-queries-in-parallel
 
-###how to run a few unrelated task in parallel in NODEJS?<br>
+#####how to run a few unrelated task in parallel in NODEJS?<br>
 https://github.com/whoissqr/NODE/wiki/how-to-run-a-few-unrelated-task-in-parallel-in-NODEJS
 
-###how to accelerate web page loading using Materialized View?
+#####how to accelerate web page loading using Materialized View?
 https://github.com/whoissqr/NODE/wiki/FAQ:-accelerate-web-page-loading-using-Materialized-View
