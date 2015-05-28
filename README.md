@@ -37,3 +37,9 @@ https://github.com/whoissqr/NODE/wiki/how-to-run-a-few-unrelated-task-in-paralle
 
 #####how to accelerate web page loading using Materialized View?
 https://github.com/whoissqr/NODE/wiki/FAQ:-accelerate-web-page-loading-using-Materialized-View
+
+#####using node.js modules
+https://github.com/whoissqr/NODE/wiki/FAQ:-node.js-modules-installation
+
+#####development automation and deployment
+https://github.com/whoissqr/NODE/wiki/FAQ:-development-automation-and-deployment
