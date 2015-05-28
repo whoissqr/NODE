@@ -32,14 +32,14 @@ https://github.com/whoissqr/NODE/wiki/A-Single-page-application-implementation-t
 #####How to run nested database queries in parallel?<br>
 https://github.com/whoissqr/NODE/wiki/note:-how-to-run-nested-database-queries-in-parallel
 
-#####how to run a few unrelated task in parallel in NODEJS?<br>
+#####How to run a few unrelated task in parallel in NODEJS?<br>
 https://github.com/whoissqr/NODE/wiki/how-to-run-a-few-unrelated-task-in-parallel-in-NODEJS
 
-#####how to accelerate web page loading using Materialized View?
+#####How to accelerate web page loading using Materialized View?
 https://github.com/whoissqr/NODE/wiki/FAQ:-accelerate-web-page-loading-using-Materialized-View
 
-#####using node.js modules
+#####Using node.js modules
 https://github.com/whoissqr/NODE/wiki/FAQ:-node.js-modules-installation
 
-#####development automation and deployment
+#####Development automation and deployment
 https://github.com/whoissqr/NODE/wiki/FAQ:-development-automation-and-deployment
