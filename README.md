@@ -1,5 +1,26 @@
-**Welcome to my mini NODE wiki!**
+#A Single-page application for simple CRUD using Node.js
 
+This is a rather straightforward Node.js project. It accepts user input through web page and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays data in chart (Dimple) and tabular (Datatables) form in browser.
+
+The project source code can be found here: [NODE](https://github.com/whoissqr/NODE)
+
+##What does it do?
+
+The page http://localhost:3000/search will present a search box and a 'Submit' button upon page load.
+
+![The blank page](https://github.com/whoissqr/NODE/blob/master/pic/blank_search.jpg)
+
+User only need to key in few characters, the search box will pop up a number of hints by matching this partial string with database retrieved information,
+
+![typeahead](https://github.com/whoissqr/NODE/blob/master/pic/Typeahead_lot.jpg)
+
+When 'Submit' button is clicked, user input is sent back to AJAX (implemented using Node.js) and data is returned in JSON format and presented in tabular and chart form.
+
+![Data shown in table](https://github.com/whoissqr/NODE/blob/master/pic/table.jpg)
+
+![Data shown in table 2](https://cloud.githubusercontent.com/assets/4846507/6773618/960f97bc-d14e-11e4-8896-afba8f9c3105.jpg)
+
+![Data shown in chart](https://cloud.githubusercontent.com/assets/4846507/6773617/960009be-d14e-11e4-9985-7dd17944cc69.jpg)
 Why do I choose NODEJS?<br>
 https://github.com/whoissqr/NODE/wiki/Why-Nodejs%3F
 
