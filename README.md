@@ -21,11 +21,15 @@ When 'Submit' button is clicked, user input is sent back to AJAX (implemented us
 ![Data shown in table 2](https://cloud.githubusercontent.com/assets/4846507/6773618/960f97bc-d14e-11e4-8896-afba8f9c3105.jpg)
 
 ![Data shown in chart](https://cloud.githubusercontent.com/assets/4846507/6773617/960009be-d14e-11e4-9985-7dd17944cc69.jpg)
-Why do I choose NODEJS?<br>
+
+Why NODEJS?<br>
 https://github.com/whoissqr/NODE/wiki/Why-Nodejs%3F
 
-My recommended NODE packages and coding environment<br>
+Modules used and coding environment<br>
 https://github.com/whoissqr/NODE/wiki/working-environment-setup
+
+Code explained<br>
+https://github.com/whoissqr/NODE/wiki/A-Single-page-application-implementation-to-display-data-from-PostgreSQL-using-Node.js
 
 How to run nested database queries in parallel?<br>
 https://github.com/whoissqr/NODE/wiki/note:-how-to-run-nested-database-queries-in-parallel
