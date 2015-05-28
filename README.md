@@ -1,4 +1,4 @@
-#A Single-page application for simple CRUD using Node.js
+##A Single-page application for simple CRUD using Node.js
 
 This is a rather straightforward Node.js project. It accepts user input through web page and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays data in chart (Dimple) and tabular (Datatables) form in browser.
 
