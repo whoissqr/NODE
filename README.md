@@ -1,4 +1,4 @@
-[![DepShield Badge](https://depshield.sonatype.org/badges/whoissqr/repository/depshield.svg)](https://depshield.github.io)
+[![DepShield Badge](https://depshield.sonatype.org/badges/whoissqr/NODE/depshield.svg)](https://depshield.github.io)
 
 ##A Single-page application for database access using Node.js
 
