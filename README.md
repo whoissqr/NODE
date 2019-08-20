@@ -1,3 +1,5 @@
+[![DepShield Badge](https://depshield.sonatype.org/badges/whoissqr/repository/depshield.svg)](https://depshield.github.io)
+
 ##A Single-page application for database access using Node.js
 
 This is a rather straightforward Node.js project. It receives user input through web form and connects to a PostgreSQL database to retrieve some data using AJAX backend, and displays data in chart (Dimple) and tabular (Datatables) form in browser.
