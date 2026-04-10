@@ -19,7 +19,7 @@
 		"pg":"4.1.1",
 		"pg-query":"0.10.1",
 		"async":"0.9.0",
-		"lodash":"2.4.1",
+		"lodash":"4.18.1",
 		"node-windows":"0.1.5",
 		"osenv":"0.1.0",
 		"should":"*",
